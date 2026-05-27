@@ -1,47 +1,92 @@
 using UnityEngine;
-using DG.Tweening;
 using UnityEngine.Splines;
 
 public class PassengerGroup : MonoBehaviour
 {
-    public ColorType groupColor;
-    public Transform[] passengers;
+    [Header("Group Info")]
+    public ColorType myColor;
+    
+    [Header("Visuals")]
+    public Renderer[] passengerMeshes;
+    
+    [Header("Movement Settings")]
+    public float speed = 0.4f;
+    public float stopSpacing = 0.12f;
+    
+    [Header("Current State")]
+    public SplineContainer currentTrack;
+    public float currentT = 1f;
+    public PassengerGroup leader;
 
-    [HideInInspector] public float currentT = 1f;
-    private SplineContainer targetTrack;
-
-    public void InitToTrack(SplineContainer track, float startT)
+    void Update()
     {
-        targetTrack = track;
-        currentT = startT;
-        transform.position = targetTrack.EvaluatePosition(currentT);
-    }
+        if (currentTrack == null) return;
 
-    public void MoveAlongSpline(float targetT)
-    {
-        DOTween.To(() => currentT, x => {
-            currentT = x;
-            if (targetTrack != null) {
-                transform.position = targetTrack.EvaluatePosition(currentT);
-                transform.forward = targetTrack.EvaluateTangent(currentT);
-            }
-        }, targetT, 0.35f).SetEase(Ease.InOutQuad);
-    }
-
-    public void BoardCar(Transform carDoor)
-    {
-        for (int i = 0; i < passengers.Length; i++)
+        bool isClosedLoop = currentTrack.Spline.Closed;
+        if (leader != null)
         {
-            float jumpDelay = i * 0.15f;
+            float targetT = leader.currentT + stopSpacing;
+            if (isClosedLoop && targetT > 1f) targetT -= 1f;
 
-            passengers[i].DOJump(carDoor.position, 0.5f, 1, 0.4f)
-                .SetDelay(jumpDelay)
-                .SetEase(Ease.InOutQuad)
-                .OnComplete(() =>
+            float distanceToTarget = currentT - targetT;
+            if (isClosedLoop && distanceToTarget < 0f) distanceToTarget += 1f; 
+            if (distanceToTarget > 0.01f) 
+            {
+                currentT -= speed * Time.deltaTime;
+                if (isClosedLoop && currentT < 0f) currentT += 1f;
+                
+                UpdateTransform();
+            }
+        }
+        else 
+        {
+            if (isClosedLoop) 
+            {
+                currentT -= speed * Time.deltaTime;
+                if (currentT < 0f) currentT += 1f;
+                
+                UpdateTransform();
+            }
+            else 
+            {
+                if (currentT > 0f) 
                 {
-                    // Hide when the passengers are on the car
-                    passengers[i].gameObject.SetActive(false);  
-                });
+                    currentT -= speed * Time.deltaTime;
+                    currentT = Mathf.Max(currentT, 0f);
+                    
+                    UpdateTransform();
+                }
+            }
+        }
+    }
+    
+    public void SetupColor(ColorType newColor, Material colorMaterial)
+    {
+        myColor = newColor;
+        
+        foreach (Renderer mesh in passengerMeshes)
+        {
+            mesh.sharedMaterial = colorMaterial; 
+        }
+    }
+
+    public void SetTrackAndLeader(SplineContainer track, float startT, PassengerGroup personInFront)
+    {
+        currentTrack = track;
+        currentT = startT;
+        leader = personInFront;
+        UpdateTransform();
+    }
+
+    private void UpdateTransform()
+    {
+        Vector3 worldPos = currentTrack.EvaluatePosition(currentT);
+        transform.position = worldPos;
+        
+        Vector3 forwardDir = currentTrack.EvaluateTangent(currentT);
+        if (forwardDir != Vector3.zero) 
+        {
+            transform.forward = forwardDir;
         }
     }
 }

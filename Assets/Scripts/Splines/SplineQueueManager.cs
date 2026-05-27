@@ -1,65 +1,68 @@
 using UnityEngine;
 using UnityEngine.Splines;
+using System.Collections.Generic;
 
 public class SplineQueueManager : MonoBehaviour
 {
     public SplineContainer loopSpline;
-    public int totalSpots = 12;
+    public List<PassengerGroup> loopQueue = new List<PassengerGroup>();
     
-    // Track the slot
-    private PassengerGroup[] occupiedSlots;
-    private float slotSpacing;
-
-    void Start()
+    public void ReleaseGatePassenger()
     {
-        occupiedSlots = new PassengerGroup[totalSpots];
-        slotSpacing = 1f / totalSpots;
-    }
-
-    public bool CanSpawnAtSlot(int slotIndex)
-    {
-        if (slotIndex < 0 || slotIndex >= totalSpots) return false;
-        return occupiedSlots[slotIndex] == null;
-    }
-
-    public void SpawnPassengerAtSlot(PassengerGroup newGroup, int slotIndex)
-    {
-        occupiedSlots[slotIndex] = newGroup;
-        float targetT = slotIndex * slotSpacing;
-        newGroup.InitToTrack(loopSpline, targetT);
-        
-        // Shift check if the slots are empty
-        ShiftPassengers();
-    }
-
-    public void ShiftPassengers()
-    {
-        bool someoneMoved = false;
-        for (int i = 1; i < totalSpots; i++)
+        if (loopQueue.Count > 0)
         {
-            if (occupiedSlots[i] != null && occupiedSlots[i - 1] == null)
+            PassengerGroup boardedGroup = loopQueue[0];
+            loopQueue.RemoveAt(0);
+            
+            if (loopQueue.Count > 0)
             {
-                occupiedSlots[i - 1] = occupiedSlots[i];
-                occupiedSlots[i] = null;
-                
-                float targetT = (i - 1) * slotSpacing;
-                occupiedSlots[i - 1].MoveAlongSpline(targetT);
-                someoneMoved = true;
+                loopQueue[0].leader = null;
+            }
+            // TODO: Boarding animation
+            Destroy(boardedGroup.gameObject); 
+        }
+    }
+    
+    public bool CanMergeAt(float mergeT, float safeDistance)
+    {
+        foreach (var group in loopQueue)
+        {
+            if (Mathf.Abs(group.currentT - mergeT) < safeDistance) return false;
+        }
+        return true;
+    }
+    
+    public void MergeIntoLoop(PassengerGroup newGroup, float mergeT)
+    {
+        PassengerGroup newLeader = null;
+        int insertIndex = 0;
+        for (int i = 0; i < loopQueue.Count; i++)
+        {
+            if (loopQueue[i].currentT < mergeT)
+            {
+                newLeader = loopQueue[i];
+                insertIndex = i + 1;
             }
         }
 
-        if (someoneMoved) Invoke(nameof(ShiftPassengers), 0.4f);
-    }
-
-    public void ReleaseGatePassenger(Transform carDoor)
-    {
-        if (occupiedSlots[0] != null)
+        if (insertIndex < loopQueue.Count)
         {
-            occupiedSlots[0].BoardCar(carDoor);
-            occupiedSlots[0] = null;
-            
-            ShiftPassengers();
+            loopQueue[insertIndex].leader = newGroup;
         }
+
+        newGroup.SetTrackAndLeader(loopSpline, mergeT, newLeader);
+        loopQueue.Insert(insertIndex, newGroup);
     }
     
+    public void RemovePassengerFromLine(PassengerGroup boardedPassenger)
+    {
+        foreach (var group in loopQueue)
+        {
+            if (group.leader == boardedPassenger)
+            {
+                group.leader = boardedPassenger.leader; 
+            }
+        }
+        loopQueue.Remove(boardedPassenger);
+    }
 }

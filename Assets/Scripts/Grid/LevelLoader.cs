@@ -1,42 +1,29 @@
-using System.Collections.Generic;
 using UnityEngine;
 
-[System.Serializable]
-public class LevelData
-{   
-    public int gridWidth;
-    public int gridHeight;
-    public List<CarSaveData> cars;
-}
-
-[System.Serializable]
-public class CarSaveData {
-    public int carTypeIndex;
-    public int startX;
-    public int startY;
-    public Direction moveDirection;
-}
-
-public class LevelLoader : MonoBehaviour {
+public class LevelLoader : MonoBehaviour 
+{
     public GridManager gridManager;
-    public List<Vehicle> carPrefabs;
-    public TextAsset levelLayout;
+    
+    [Header("Level Data")]
+    public LevelDataSO currentLevel;
 
-    void Start() {
-        if (levelLayout != null) {
-            LoadLevelFromJson(levelLayout.text);
+    void Start() 
+    {
+        if (currentLevel != null) 
+        {
+            LoadLevelFromSO();
         }
     }
 
-    public void LoadLevelFromJson(string jsonText) {
-        LevelData data = JsonUtility.FromJson<LevelData>(jsonText);
-        
-        // Initiate the grid
-        gridManager.InitializeGrid(data.gridWidth, data.gridHeight);
-        
-        foreach (var car in data.cars) {
-            Vehicle prefab = carPrefabs[car.carTypeIndex];
-            gridManager.SpawnVehicle(prefab, car.startX, car.startY, car.moveDirection);
+    public void LoadLevelFromSO() 
+    {
+        gridManager.InitializeGrid(currentLevel.gridWidth, currentLevel.gridHeight);
+        foreach (CarSpawnData carData in currentLevel.carsInLevel) 
+        {
+            gridManager.SpawnVehicle(carData.carPrefab, carData.startX, carData.startY, carData.moveDirection);
         }
+
+        // TODO: Feed the funnels
+        // Dictionary<ColorType, int> passengerDeck = currentLevel.CalculateRequiredPassengers();
     }       
 }

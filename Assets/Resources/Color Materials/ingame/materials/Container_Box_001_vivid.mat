@@ -180,7 +180,7 @@ Material:
     - __dirty: 1
     m_Colors:
     - _BaseColor: {r: 0.042452782, g: 0.21220165, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.042452767, g: 0.21220163, b: 1, a: 1}
     - _ColorA: {r: 1, g: 0, b: 0, a: 0}
     - _ColorB: {r: 0, g: 0.1264467, b: 1, a: 0}
     - _DiffuseColor: {r: 0.4009434, g: 0.5199051, b: 1, a: 1}
