@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PieceServerGate
+  m_Shader: {fileID: 4800000, guid: 3e145bddc35742549ac2af39d3e2cad1, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _USESHADOW_ON
+  - _USESPECULAR_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties:
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+      _EmissiveMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _MainTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _NormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _RimTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _ShadowTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _SpecularMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _TextureRamp:
+        m_Texture: {fileID: 2800000, guid: cb40632fd5aebd74fb45e62e0e98ad53, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+      _texcoord:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: {}
+    m_Floats:
+      _Animate: 0
+      _BumpScale: 1
+      _ChangeAxis: 0
+      _Cutoff: 0.5
+      _DetailNormalMapScale: 1
+      _DstBlend: 0
+      _GlossMapScale: 1
+      _Glossiness: 0.5
+      _GlossyReflections: 1
+      _GradientPosition: 0
+      _GradientRotation: 0
+      _GradientSize: 0
+      _Level2: 0
+      _Level3: 0
+      _Metallic: 0
+      _Mode: 0
+      _NormalStrength: 1
+      _OcclusionStrength: 1
+      _Parallax: 0.02
+      _RimBlend: 2.21
+      _RimLightColor: 0
+      _RimLightIntensity: 0
+      _RimSize: 0.74
+      _RimTextureRotation: 0
+      _RimTextureTiling: 0
+      _RimTextureViewProjection: 0
+      _ShadowBlend: 0.749
+      _ShadowSize: 0
+      _ShadowTextureRotation: 0
+      _ShadowTextureTiling: 0
+      _ShadowTextureViewProjection: 0
+      _Smoothness: 0.5
+      _SmoothnessTextureChannel: 0
+      _SpecLightColor: 0
+      _SpecularBlend: 1
+      _SpecularHighlights: 1
+      _SpecularLightIntensity: 1
+      _SpecularSize: 0.678
+      _SpecularTextureRotation: 0
+      _SpecularTextureTiling: 0
+      _SpecularTextureViewProjection: 0
+      _SrcBlend: 1
+      _UVSec: 0
+      _UseEmissive: 0
+      _UseGradient: 0
+      _UseNormalMap: 0
+      _UseRamp: 0
+      _UseRim: 0
+      _UseShadow: 1
+      _UseShadowTexture: 0
+      _UseSpecular: 1
+      _XDirectionSpeed: 0
+      _YDirectionSpeed: 0
+      _ZWrite: 1
+      __dirty: 1
+    m_Colors:
+      _Color: {r: 1, g: 1, b: 1, a: 1}
+      _ColorA: {r: 1, g: 0, b: 0, a: 0}
+      _ColorB: {r: 0, g: 0.1264467, b: 1, a: 0}
+      _DiffuseColor: {r: 1, g: 0.6458118, b: 0, a: 1}
+      _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+      _EmissiveColor: {r: 2.996078, g: 0.0611825, b: 0, a: 0}
+      _RimColor: {r: 0.5377358, g: 0.5377358, b: 0.5377358, a: 1}
+      _ShadowColor: {r: 0.6603774, g: 0.6603774, b: 0.6603774, a: 1}
+      _SpecularColor: {r: 0.764151, g: 0.764151, b: 0.764151, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 0
