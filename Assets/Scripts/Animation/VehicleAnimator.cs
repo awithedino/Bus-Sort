@@ -5,7 +5,7 @@ public class VehicleAnimator : MonoBehaviour {
     public bool isAnimating = false;
     
     public void AnimateBump(Direction dir, int spaces) {
-        if (isAnimating) return; // The hard lock!
+        if (isAnimating) return; 
         isAnimating = true;
         
         Vector3 moveVec = Vector3.zero;
@@ -27,12 +27,13 @@ public class VehicleAnimator : MonoBehaviour {
     }
 
     public void AnimateEscape(Direction moveDir, Transform targetSlot) {
-        Vector2 burstPos = transform.position;
+        isAnimating = true;
+        Vector3 burstPos = transform.position; 
         float burstDist = 1.5f; 
         
         switch (moveDir) {
-            case Direction.Up: burstPos.y += burstDist; break;
-            case Direction.Down: burstPos.y -= burstDist; break;
+            case Direction.Up: burstPos.z += burstDist; break;
+            case Direction.Down: burstPos.z -= burstDist; break;
             case Direction.Right: burstPos.x += burstDist; break;
             case Direction.Left: burstPos.x -= burstDist; break;
         }
@@ -40,23 +41,25 @@ public class VehicleAnimator : MonoBehaviour {
         Sequence escapeSeq = DOTween.Sequence();
         escapeSeq.Append(transform.DOMove(burstPos, 0.15f).SetEase(Ease.InFlash));
         escapeSeq.Append(transform.DOMove(targetSlot.position, 0.3f).SetEase(Ease.InOutFlash));  
-        escapeSeq.Join(transform.DORotate(targetSlot.rotation.eulerAngles, 0.3f));
+        Vector3 flatRotation = new Vector3(0, targetSlot.rotation.eulerAngles.y, 0);
+        escapeSeq.Join(transform.DORotate(flatRotation, 0.3f));
     }
     
     public void AnimateShake() {
         if (isAnimating) return;
         isAnimating = true;
-        transform.DOShakeRotation(0.3f, new Vector3(0, 25f, 0), 15, 90, false);
+        transform.DOShakeRotation(0.3f, new Vector3(0, 25f, 0), 15, 90, false)
+                 .OnComplete(() => isAnimating = false);
     }
     
     public void UpdateVisualRotation(Direction dir) {
-        Vector3 rotationAngles = new Vector3(90, 0, 0); 
+        Vector3 rotationAngles = Vector3.zero; 
 
         switch (dir) {
-            case Direction.Up: rotationAngles = new Vector3(90, 0, 0); break;
-            case Direction.Right: rotationAngles = new Vector3(90, 90, 0); break;
-            case Direction.Down: rotationAngles = new Vector3(90, 180, 0); break;
-            case Direction.Left: rotationAngles = new Vector3(90, -90, 0); break;
+            case Direction.Up: rotationAngles = new Vector3(0, 0, 0); break;
+            case Direction.Right: rotationAngles = new Vector3(0, 90, 0); break;
+            case Direction.Down: rotationAngles = new Vector3(0, 180, 0); break;
+            case Direction.Left: rotationAngles = new Vector3(0, -90, 0); break;
         }
 
         transform.rotation = Quaternion.Euler(rotationAngles);

@@ -1078,11 +1078,11 @@ MonoBehaviour:
   carPrefabs:
   - {fileID: 7005859302287855442, guid: 1a6f3b61605e8ed4e839afe19f8325ff, type: 3}
   - {fileID: 24029360630251985, guid: 79103eefbcf5a6a449c95c1ccf92554e, type: 3}
-  - {fileID: 8337642438364490320, guid: b3d0a639869a4f945a97b2c2288c391b, type: 3}
+  - {fileID: 7005859302287855442, guid: e41475d1a756b854d893b2ecde79a4f5, type: 3}
   - {fileID: 2776056640686909947, guid: beb42d90b478f844b9dea48ffcda5e38, type: 3}
-  - {fileID: 7874200754657529114, guid: 1c96bb84a34236f4fb2ff2bc8cc4a36f, type: 3}
+  - {fileID: 7005859302287855442, guid: e36be531c9d1bcb4b8f2f3fdaa359ccd, type: 3}
   - {fileID: 8534246957399022974, guid: 6b89f8fa1241f50438900749e05fafdf, type: 3}
-  - {fileID: 9015424106598152079, guid: 08b73798e67efcf488b16fe88b58bd13, type: 3}
+  - {fileID: 7005859302287855442, guid: 9fd7809c243f868439ddb95291a48515, type: 3}
   - {fileID: 2674781297381674490, guid: d984a58f2d1bcbc4f90ddbfdb58c3290, type: 3}
   levelLayout: {fileID: 4900000, guid: 6f2d29915f8527d47af2ec88576d26a8, type: 3}
 --- !u!4 &1061235258
