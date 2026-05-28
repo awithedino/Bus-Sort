@@ -1,50 +1,53 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using DG.Tweening;
 
-public class ParkingManager : MonoBehaviour
+public class ParkingManager : MonoBehaviour 
 {
-    public Transform[] parkingSlots;
-    public List<Vehicle> parkedCars = new();
+    public Transform[] parkingSlots; 
+    public Vehicle[] parkedCars; 
 
-    public Transform GetNextAvailableSlot(Vehicle carToPark)
+    void Awake()
     {
-        if (parkedCars.Count < parkingSlots.Length)
+        parkedCars = new Vehicle[parkingSlots.Length];
+    }
+    
+    public Transform GetNextAvailableSlot(Vehicle carToPark) 
+    {
+        for (int i = 0; i < parkedCars.Length; i++)
         {
-            var slot = parkingSlots[parkedCars.Count];
-            parkedCars.Add(carToPark);
-            return slot;
+            if (parkedCars[i] == null)
+            {
+                parkedCars[i] = carToPark;
+                return parkingSlots[i];
+            }
         }
+        
         Debug.Log("The loading zone is full! 🛑");
         return null;
     }
 
-    public Vehicle FindMatchingCar(ColorType requestedColor)
+    public Vehicle FindMatchingCar(ColorType requestedColor) 
     {
-        foreach (var car in parkedCars)
-            if (car.carColor == requestedColor && !car.isFull())
-                return car;
-
-        return null;
-    }
-    
-    public void DispatchCar(Vehicle fullCar)
-    {
-        if (!parkedCars.Contains(fullCar)) return;
-        parkedCars.Remove(fullCar);
-
-        // Exit animation
-        var leaveSeq = DOTween.Sequence();
-        leaveSeq.Append(fullCar.transform.DOMoveZ(fullCar.transform.position.z - 2f, 0.4f).SetEase(Ease.OutQuad));
-        leaveSeq.Append(fullCar.transform.DOMoveX(fullCar.transform.position.x - 20f, 1f).SetEase(Ease.InBack));
-        leaveSeq.OnComplete(() => Destroy(fullCar.gameObject));
-
-        ShiftCars();
+        foreach (Vehicle car in parkedCars) 
+        {
+            if (car != null && car.carColor == requestedColor && !car.isFull() && car.isParked) 
+            {
+                return car; 
+            }
+        }
+        return null; 
     }
 
-    private void ShiftCars()
+    public void DispatchCar(Vehicle fullCar) 
     {
-        for (var i = 0; i < parkedCars.Count; i++)
-            parkedCars[i].transform.DOMove(parkingSlots[i].position, 0.5f).SetEase(Ease.OutQuad);
-    }
+        for (int i = 0; i < parkedCars.Length; i++)
+        {
+            if (parkedCars[i] == fullCar)
+            {
+                parkedCars[i] = null;
+                break;
+            }
+        }
+        fullCar.GetComponent<VehicleAnimator>().AnimateLeave();
+    }   
 }

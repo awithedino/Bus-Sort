@@ -28,8 +28,10 @@ public class VehicleAnimator : MonoBehaviour {
 
     public void AnimateEscape(Direction moveDir, Transform targetSlot) {
         isAnimating = true;
-        Vector3 burstPos = transform.position; 
-        float burstDist = 1.5f; 
+        
+        Vector3 startPos = transform.position;
+        Vector3 burstPos = startPos; 
+        float burstDist = 2.0f; 
         
         switch (moveDir) {
             case Direction.Up: burstPos.z += burstDist; break;
@@ -37,12 +39,25 @@ public class VehicleAnimator : MonoBehaviour {
             case Direction.Right: burstPos.x += burstDist; break;
             case Direction.Left: burstPos.x -= burstDist; break;
         }
+        Vector3 finalPos = targetSlot.position;
+        finalPos.y = startPos.y;
 
-        Sequence escapeSeq = DOTween.Sequence();
-        escapeSeq.Append(transform.DOMove(burstPos, 0.15f).SetEase(Ease.InFlash));
-        escapeSeq.Append(transform.DOMove(targetSlot.position, 0.3f).SetEase(Ease.InOutFlash));  
-        Vector3 flatRotation = new Vector3(0, targetSlot.rotation.eulerAngles.y, 0);
-        escapeSeq.Join(transform.DORotate(flatRotation, 0.3f));
+        Vector3[] path = new Vector3[] { startPos, burstPos, finalPos };
+        transform.DOPath(path, 0.6f, PathType.CatmullRom)
+            .SetEase(Ease.OutQuad)
+            .SetLookAt(0.01f, Vector3.forward, Vector3.up) 
+            .OnComplete(() => {
+                transform.rotation = Quaternion.Euler(0, targetSlot.rotation.eulerAngles.y, 0);
+                isAnimating = false;
+                GetComponent<Vehicle>().isParked = true; 
+            });
+    }
+
+    public void AnimateLeave() {
+        Sequence leaveSeq = DOTween.Sequence();
+        leaveSeq.Append(transform.DOMoveZ(transform.position.z - 1.5f, 0.3f).SetEase(Ease.OutQuad));
+        leaveSeq.Append(transform.DOMoveX(transform.position.x - 20f, 0.8f).SetEase(Ease.InBack));
+        leaveSeq.OnComplete(() => Destroy(gameObject));
     }
     
     public void AnimateShake() {

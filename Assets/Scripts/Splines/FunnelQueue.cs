@@ -15,6 +15,9 @@ public class FunnelQueue : MonoBehaviour
     public int maxCapacity = 4;
     public float spawnInterval = 3f;
     
+    [Header("Deck System")]
+    public LevelLoader levelLoader;
+    
     [Header("Color Materials (0 = Red, 1 = Blue, 2 = Green, 3 = Orange)")]
     public Material[] colorMaterials;
 
@@ -44,16 +47,16 @@ public class FunnelQueue : MonoBehaviour
 
     void SpawnPassenger()
     {
+        if (!levelLoader.TryDrawPassenger(out ColorType chosenColor))
+        {
+            return; 
+        }
+
         Vector3 spawnPos = funnelSpline.EvaluatePosition(1f); 
-        PassengerGroup newGroup = Instantiate(passengerPrefab, spawnPos, Quaternion.identity, passengerContainer);
-
-        // Random color
-        int randomColorIndex = Random.Range(0, colorMaterials.Length);
-        ColorType chosenColor = (ColorType)randomColorIndex;
-        Material chosenMat = colorMaterials[randomColorIndex];
-
-        // Paint
+        PassengerGroup newGroup = PassengerPool.Instance.GetPassenger(spawnPos, Quaternion.identity, passengerContainer);
+        Material chosenMat = colorMaterials[(int)chosenColor];
         newGroup.SetupColor(chosenColor, chosenMat);
+
         PassengerGroup leader = funnelQueue.Count > 0 ? funnelQueue[funnelQueue.Count - 1] : null;
         newGroup.SetTrackAndLeader(funnelSpline, 1f, leader);
         

@@ -21,13 +21,15 @@ public class ServeArea : MonoBehaviour
     private void BoardCar(PassengerGroup passenger, Vehicle car)
     {
         car.currentCapacity += 4; 
+        
         passenger.currentTrack = null; 
         mainQueue.RemovePassengerFromLine(passenger);
-        
+
         passenger.transform.DOMove(car.transform.position, 0.5f).SetEase(Ease.InOutQuad).OnComplete(() => 
         {
-            Destroy(passenger.gameObject);
-            if (car.isFull()) 
+            PassengerPool.Instance.ReturnPassenger(passenger);
+            car.boardedCapacity += 4; 
+            if (car.boardedCapacity >= car.capacity)
             {
                 parkingManager.DispatchCar(car);
             }
