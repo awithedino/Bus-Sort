@@ -115,8 +115,7 @@ public class GridManager : MonoBehaviour
 
         return null;
     }
-
-    // Changed to bool!
+    
     public bool EscapeVehicle(Vehicle car) {
         Transform targetSlot = parkingManager.GetNextAvailableSlot(car);
         
@@ -128,7 +127,9 @@ public class GridManager : MonoBehaviour
                     }
                 }
             }
-            car.GetComponent<VehicleAnimator>().AnimateEscape(car.moveDirection, targetSlot);
+            Vector3 exitPoint = car.transform.position + (car.transform.forward * 3f);
+            car.GetComponent<VehicleAnimator>().AnimateEscape(targetSlot, exitPoint);
+            
             car.arrowVisual.gameObject.SetActive(false);
             return true;
         } else {
@@ -179,5 +180,13 @@ public class GridManager : MonoBehaviour
             currY += stepY;
         }
         return true;
+    }
+    
+    public void ClearBoard()
+    {
+        foreach (Transform child in transform)
+        {
+            Destroy(child.gameObject);
+        }
     }
 }

@@ -12,6 +12,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1e5c9c1c80fa7f479eef5adf3080d90, type: 3}
   m_Name: Level_3
   m_EditorClassIdentifier: Assembly-CSharp::LevelDataSO
-  gridWidth: 6
-  gridHeight: 6
-  carsInLevel: []
+  gridWidth: 7
+  gridHeight: 7
+  carsInLevel:
+  - carPrefab: {fileID: 7005859302287855442, guid: 1a6f3b61605e8ed4e839afe19f8325ff, type: 3}
+    startX: 5
+    startY: 1
+    moveDirection: 1
+  - carPrefab: {fileID: 6896961032347751581, guid: 0fefdd1e4c90a6f4fb8341bef1eee986, type: 3}
+    startX: 2
+    startY: 1
+    moveDirection: 3
+  - carPrefab: {fileID: 7399233123007107381, guid: c476253fc5c5ff4489e157526d650eee, type: 3}
+    startX: 4
+    startY: 4
+    moveDirection: 1
+  - carPrefab: {fileID: 7005859302287855442, guid: e36be531c9d1bcb4b8f2f3fdaa359ccd, type: 3}
+    startX: 2
+    startY: 4
+    moveDirection: 3
+  - carPrefab: {fileID: 7005859302287855442, guid: 1a6f3b61605e8ed4e839afe19f8325ff, type: 3}
+    startX: 3
+    startY: 6
+    moveDirection: 1
+  - carPrefab: {fileID: 7005859302287855442, guid: 9fd7809c243f868439ddb95291a48515, type: 3}
+    startX: 1
+    startY: 5
+    moveDirection: 3
+  - carPrefab: {fileID: 7005859302287855442, guid: e41475d1a756b854d893b2ecde79a4f5, type: 3}
+    startX: 2
+    startY: 2
+    moveDirection: 0
+  - carPrefab: {fileID: 7005859302287855442, guid: e36be531c9d1bcb4b8f2f3fdaa359ccd, type: 3}
+    startX: 0
+    startY: 2
+    moveDirection: 3

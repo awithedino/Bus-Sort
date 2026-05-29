@@ -10,11 +10,6 @@ public class LevelLoader : MonoBehaviour
 
     private List<ColorType> passengerDeck = new List<ColorType>();
 
-    void Start() 
-    {
-        if (currentLevel != null) LoadLevelFromSO();
-    }
-
     public void LoadLevelFromSO() 
     {
         gridManager.InitializeGrid(currentLevel.gridWidth, currentLevel.gridHeight);

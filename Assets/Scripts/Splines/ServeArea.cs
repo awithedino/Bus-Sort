@@ -28,9 +28,13 @@ public class ServeArea : MonoBehaviour
         passenger.transform.DOMove(car.transform.position, 0.5f).SetEase(Ease.InOutQuad).OnComplete(() => 
         {
             PassengerPool.Instance.ReturnPassenger(passenger);
-            car.boardedCapacity += 4; 
+            
+            car.boardedCapacity += 4;
+            car.UpdateCapacityUI();
+            
             if (car.boardedCapacity >= car.capacity)
             {
+                car.SetTextVisible(false);
                 parkingManager.DispatchCar(car);
             }
         });

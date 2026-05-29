@@ -1,29 +1,57 @@
-using System;
 using UnityEngine;
+using TMPro;
+using Unity.VisualScripting;
 
 public enum Direction { Up, Down, Left, Right }
 
 public class Vehicle : MonoBehaviour
 {
-    // Car info
+    [Header("Car information")]
     public int id;
     public int length;
-    // Bool check
+    
+    [Header("True/False checker")]
     public bool isHorizontal;
     public bool isParked = false;
-    // Inside maze
+    
+    [Header("Car direction, color")]
     public Direction moveDirection;
     public ColorType carColor;
-    // Car's passenger capacity
+    public Transform arrowVisual;
+    
+    [Header("Capacity")]
     public int capacity = 16;
     public int currentCapacity;
     public int boardedCapacity = 0;
 
-    public Transform arrowVisual;
+    [Header("UI")] 
+    public TMP_Text capacityText;
+    
+    void Start()
+    {
+        UpdateCapacityUI();
+        SetTextVisible(false);
+    }
     
     public void SetupDirection(Direction dir) {
         moveDirection = dir;
         GetComponent<VehicleAnimator>().UpdateVisualRotation(dir); 
+    }
+
+    public void SetTextVisible(bool isVisible)
+    {
+        if (capacityText != null)
+        {
+            capacityText.gameObject.SetActive(isVisible);
+        }
+    }
+    
+    public void UpdateCapacityUI()
+    {
+        if (capacityText != null)
+        {
+            capacityText.text = $"{boardedCapacity}/{capacity}"; 
+        }
     }
 
     public bool isFull()

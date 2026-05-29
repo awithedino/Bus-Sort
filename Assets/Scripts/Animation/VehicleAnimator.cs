@@ -3,6 +3,14 @@ using DG.Tweening;
 
 public class VehicleAnimator : MonoBehaviour {
     public bool isAnimating = false;
+    private Vehicle myVehicle; 
+    private Collider myCollider;
+    
+    void Awake()
+    {
+        myVehicle = GetComponent<Vehicle>();
+        myCollider = GetComponent<Collider>();
+    }
     
     public void AnimateBump(Direction dir, int spaces) {
         if (isAnimating) return; 
@@ -26,38 +34,50 @@ public class VehicleAnimator : MonoBehaviour {
         bumpSeq.OnComplete(() => isAnimating = false);
     }
 
-    public void AnimateEscape(Direction moveDir, Transform targetSlot) {
+    public void AnimateEscape(Transform targetSlot, Vector3 gridExitPoint)
+    {
         isAnimating = true;
-        
-        Vector3 startPos = transform.position;
-        Vector3 burstPos = startPos; 
-        float burstDist = 2.0f; 
-        
-        switch (moveDir) {
-            case Direction.Up: burstPos.z += burstDist; break;
-            case Direction.Down: burstPos.z -= burstDist; break;
-            case Direction.Right: burstPos.x += burstDist; break;
-            case Direction.Left: burstPos.x -= burstDist; break;
-        }
-        Vector3 finalPos = targetSlot.position;
-        finalPos.y = startPos.y;
+        if (myCollider != null) myCollider.enabled = false;
 
-        Vector3[] path = new Vector3[] { startPos, burstPos, finalPos };
-        transform.DOPath(path, 0.6f, PathType.CatmullRom)
-            .SetEase(Ease.OutQuad)
-            .SetLookAt(0.01f, Vector3.forward, Vector3.up) 
-            .OnComplete(() => {
-                transform.rotation = Quaternion.Euler(0, targetSlot.rotation.eulerAngles.y, 0);
-                isAnimating = false;
-                GetComponent<Vehicle>().isParked = true; 
-            });
+        float flatY = transform.position.y;
+        Vector3 flatExit = new Vector3(gridExitPoint.x, flatY, gridExitPoint.z);
+        Vector3 lanePos = targetSlot.position + (targetSlot.forward * -4f);
+        Vector3 flatSlot = new Vector3(targetSlot.position.x, flatY, targetSlot.position.z);
+        
+        Vector3[] approachPath = new Vector3[] { transform.position, flatExit, lanePos };
+        Sequence parkSeq = DOTween.Sequence();
+        
+        parkSeq.Append(transform.DOPath(approachPath, 0.6f, PathType.CatmullRom)
+            .SetOptions(false, AxisConstraint.Y)
+            .SetLookAt(0.01f)
+            .SetEase(Ease.InOutQuad));
+        parkSeq.Append(transform.DOMove(flatSlot, 0.2f).SetEase(Ease.OutQuad));
+        
+        Vector3 targetRot = new Vector3(0, targetSlot.rotation.eulerAngles.y, 0);
+        parkSeq.Join(transform.DORotate(targetRot, 0.2f));
+
+        parkSeq.OnComplete(() => {
+            isAnimating = false;
+            myVehicle.isParked = true; 
+            myVehicle.SetTextVisible(true); 
+            
+            if (myCollider != null) myCollider.enabled = true;
+        });
     }
 
-    public void AnimateLeave() {
-        Sequence leaveSeq = DOTween.Sequence();
-        leaveSeq.Append(transform.DOMoveZ(transform.position.z - 1.5f, 0.3f).SetEase(Ease.OutQuad));
-        leaveSeq.Append(transform.DOMoveX(transform.position.x - 20f, 0.8f).SetEase(Ease.InBack));
-        leaveSeq.OnComplete(() => Destroy(gameObject));
+    public void AnimateLeave()
+    {
+        Sequence exitSequence = DOTween.Sequence();
+        Vector3 lanePosition = transform.position + (transform.forward * -2f); 
+        exitSequence.Append(transform.DOMove(lanePosition, 0.5f).SetEase(Ease.OutBack));
+        Vector3 offScreenPosition = lanePosition + (Vector3.right * 15f); 
+        exitSequence.Append(transform.DOLookAt(offScreenPosition, 0.1f));
+        exitSequence.Append(transform.DOMove(offScreenPosition, 1f).SetEase(Ease.InQuad));
+
+        exitSequence.OnComplete(() => {
+            GameManager.Instance.CarEscaped();
+            Destroy(gameObject);
+        });
     }
     
     public void AnimateShake() {
