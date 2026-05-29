@@ -18,8 +18,10 @@ public class GridManager : MonoBehaviour
     public Transform vehicleParent;
     public ParkingManager parkingManager;
     
-    // CHANGED: Made this a Vector3 and moved the -3f offset to the Z axis!
-    public Vector3 gridOffset = new Vector3(0, 0, -3f); 
+    public Vector3 gridOffset = new Vector3(0, 0, -3f);
+    
+    [Header("Display Settings")]
+    public float baseGridSize = 6f;
     
     public void Start()
     {
@@ -32,16 +34,15 @@ public class GridManager : MonoBehaviour
         height = h;
         gridState = new int[width, height];
         vehicles.Clear();
+        AutoScaleBoard(width, height);
     }
     
-    // CHANGED: Returns Vector3. Grid 'y' maps to World 'z'. World 'y' is strictly 0 (the floor).
     public Vector3 GridToWorld(int x, int y) {
         float startX = -((width - 1) / 2f) + gridOffset.x;
         float startZ = -((height - 1) / 2f) + gridOffset.z; 
         return new Vector3(startX + x, 0, startZ + y);
     }
     
-    // CHANGED: Takes a Vector3. Reads from world 'z' instead of 'y'.
     public Vector2Int WorldToGrid(Vector3 worldPos) {
         float startX = -((width - 1) / 2f) + gridOffset.x;
         float startZ = -((height - 1) / 2f) + gridOffset.z;
@@ -50,6 +51,21 @@ public class GridManager : MonoBehaviour
         int y = Mathf.RoundToInt(worldPos.z - startZ); // y reads from z!
     
         return new Vector2Int(x, y);
+    }
+    
+    private void AutoScaleBoard(int currentWidth, int currentHeight)
+    {
+        float maxDimension = Mathf.Max(currentWidth, currentHeight);
+        
+        if (maxDimension > baseGridSize)
+        {
+            float scaleFactor = baseGridSize / maxDimension;
+            transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+        }
+        else
+        {
+            transform.localScale = Vector3.one; // Keep it normal size
+        }
     }
     
     // ---------------- VEHICLE REGISTER, POSITION, SPAWNING ---------------------
