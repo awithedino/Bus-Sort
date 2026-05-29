@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using DG.Tweening;
 
 public class PlayerInput : MonoBehaviour
@@ -8,14 +9,16 @@ public class PlayerInput : MonoBehaviour
 
     void Start() 
     {
-        mainCam = Camera.main; // Caching this is better for performance!
+        mainCam = Camera.main; 
     }
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
         {
-            Ray ray = mainCam.ScreenPointToRay(Input.mousePosition);
+            Vector2 screenPosition = Pointer.current.position.ReadValue();
+            
+            Ray ray = mainCam.ScreenPointToRay(screenPosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
                 Vector2Int gridPos = gridManager.WorldToGrid(hit.point);
