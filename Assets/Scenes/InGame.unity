@@ -537,6 +537,7 @@ GameObject:
   m_Component:
   - component: {fileID: 252351876}
   - component: {fileID: 252351875}
+  - component: {fileID: 252351877}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -580,6 +581,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &252351877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 252351874}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eec971f433ab2f45a998f7e78a00209, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ColorManager
+  colorBank:
+  - colorType: 0
+    carMaterial: {fileID: 2100000, guid: 86e24cc564411074e9ae729b1a969342, type: 2}
+  - colorType: 1
+    carMaterial: {fileID: 2100000, guid: 0fd0e680ec6c39649a574ec7c53102ee, type: 2}
+  - colorType: 2
+    carMaterial: {fileID: 2100000, guid: aa89953c0fcf95442b52a324203cd3b6, type: 2}
+  - colorType: 3
+    carMaterial: {fileID: 2100000, guid: ce8da20db5c4478498e5ae104d14b8ac, type: 2}
 --- !u!1 &281618908
 GameObject:
   m_ObjectHideFlags: 0

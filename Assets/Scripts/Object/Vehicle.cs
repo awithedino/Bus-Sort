@@ -23,9 +23,13 @@ public class Vehicle : MonoBehaviour
     public int capacity = 16;
     public int currentCapacity;
     public int boardedCapacity = 0;
+    
+    [Header("Visuals")]
+    public Renderer carBodyRenderer;
 
     [Header("UI")] 
     public TMP_Text capacityText;
+    public Transform capacityCanvas;
     
     void Start()
     {
@@ -40,9 +44,9 @@ public class Vehicle : MonoBehaviour
 
     public void SetTextVisible(bool isVisible)
     {
-        if (capacityText != null)
+        if (capacityCanvas != null) 
         {
-            capacityText.gameObject.SetActive(isVisible);
+            capacityCanvas.gameObject.SetActive(isVisible);
         }
     }
     
@@ -50,7 +54,27 @@ public class Vehicle : MonoBehaviour
     {
         if (capacityText != null)
         {
-            capacityText.text = $"{boardedCapacity}/{capacity}"; 
+            int val = capacity - boardedCapacity;
+            capacityText.text = $"{val}"; 
+        }
+    }
+    
+    public void SetColor(Material newMat)
+    {
+        if (carBodyRenderer != null && newMat != null)
+        {
+            carBodyRenderer.material = newMat;
+        }
+    }
+    
+    public void ApplyColor(ColorType chosenColor)
+    {
+        carColor = chosenColor; 
+        Material assignedMat = ColorManager.Instance.GetMaterial(chosenColor);
+
+        if (assignedMat != null)
+        {
+            if (carBodyRenderer != null) carBodyRenderer.sharedMaterial = assignedMat;
         }
     }
 

@@ -90,7 +90,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void SpawnVehicle(Vehicle newVehicle, int startX, int startY, Direction dir)
+    public void SpawnVehicle(Vehicle newVehicle, int startX, int startY, Direction dir, ColorType chosenColor)
     {
         Vector3 spawnPos = GridToWorld(startX, startY); 
         Vehicle spawnedCar = Instantiate(newVehicle, spawnPos, newVehicle.transform.rotation, vehicleParent);
@@ -99,6 +99,8 @@ public class GridManager : MonoBehaviour
         nextCarId++;
     
         spawnedCar.SetupDirection(dir);
+        spawnedCar.ApplyColor(chosenColor); 
+
         RegisterVehicle(spawnedCar, startX, startY);
     }
 

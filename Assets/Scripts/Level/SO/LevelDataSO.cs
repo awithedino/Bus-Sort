@@ -17,13 +17,11 @@ public class LevelDataSO : ScriptableObject
 
         foreach (var carData in carsInLevel)
         {
-            // Assuming each car holds 16, and each group is 4 people
             int groupsNeeded = carData.carPrefab.capacity / 4; 
-
-            if (colorCounts.ContainsKey(carData.carPrefab.carColor)) {
-                colorCounts[carData.carPrefab.carColor] += groupsNeeded;
+            if (colorCounts.ContainsKey(carData.paintColor)) {
+                colorCounts[carData.paintColor] += groupsNeeded;
             } else {
-                colorCounts.Add(carData.carPrefab.carColor, groupsNeeded);
+                colorCounts.Add(carData.paintColor, groupsNeeded);
             }
         }
         return colorCounts;
@@ -37,4 +35,5 @@ public class CarSpawnData
     public int startX;
     public int startY;
     public Direction moveDirection;
+    public ColorType paintColor;
 }

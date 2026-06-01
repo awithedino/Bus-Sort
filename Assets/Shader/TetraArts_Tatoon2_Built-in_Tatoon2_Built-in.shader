@@ -86,11 +86,12 @@ Shader "TetraArts/Tatoon2/Built-in/Tatoon2_Built-in" {
 				return output;
 			}
 
+			float4 _DiffuseColor; 
+
 			float4 frag(Vertex_Stage_Output input) : SV_TARGET
 			{
-				return float4(1.0, 1.0, 1.0, 1.0); // RGBA
+				return _DiffuseColor; 
 			}
-
 			ENDHLSL
 		}
 	}

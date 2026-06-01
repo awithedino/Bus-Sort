@@ -15,27 +15,33 @@ MonoBehaviour:
   gridWidth: 6
   gridHeight: 6
   carsInLevel:
-  - carPrefab: {fileID: 7005859302287855442, guid: e41475d1a756b854d893b2ecde79a4f5, type: 3}
+  - carPrefab: {fileID: 5443160551435186642, guid: 35ffbedb1aea0d742a09a9322ba2af5c, type: 3}
     startX: 4
     startY: 0
     moveDirection: 3
-  - carPrefab: {fileID: 8483105513860847384, guid: ef4a3bc3cd8a07940a1e5e0fec93a947, type: 3}
+    paintColor: 2
+  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
     startX: 4
     startY: 3
     moveDirection: 1
-  - carPrefab: {fileID: 7005859302287855442, guid: 9fd7809c243f868439ddb95291a48515, type: 3}
+    paintColor: 1
+  - carPrefab: {fileID: 5443160551435186642, guid: 35ffbedb1aea0d742a09a9322ba2af5c, type: 3}
     startX: 2
     startY: 3
     moveDirection: 3
-  - carPrefab: {fileID: 7881842977634068932, guid: e2e901722aea48f41bb305015ccf41d3, type: 3}
+    paintColor: 0
+  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
     startX: 2
     startY: 0
     moveDirection: 0
-  - carPrefab: {fileID: 7005859302287855442, guid: e41475d1a756b854d893b2ecde79a4f5, type: 3}
+    paintColor: 3
+  - carPrefab: {fileID: 5443160551435186642, guid: 35ffbedb1aea0d742a09a9322ba2af5c, type: 3}
     startX: 0
     startY: 2
     moveDirection: 3
-  - carPrefab: {fileID: 7005859302287855442, guid: 9fd7809c243f868439ddb95291a48515, type: 3}
+    paintColor: 2
+  - carPrefab: {fileID: 5443160551435186642, guid: 35ffbedb1aea0d742a09a9322ba2af5c, type: 3}
     startX: 1
     startY: 4
     moveDirection: 1
+    paintColor: 0

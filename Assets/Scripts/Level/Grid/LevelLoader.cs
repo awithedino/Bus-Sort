@@ -16,7 +16,8 @@ public class LevelLoader : MonoBehaviour
         
         foreach (CarSpawnData carData in currentLevel.carsInLevel) 
         {
-            gridManager.SpawnVehicle(carData.carPrefab, carData.startX, carData.startY, carData.moveDirection);
+            // PASS THE ENUM: Add carData.paintColor here!
+            gridManager.SpawnVehicle(carData.carPrefab, carData.startX, carData.startY, carData.moveDirection, carData.paintColor);
         }
 
         BuildAndShuffleDeck();
