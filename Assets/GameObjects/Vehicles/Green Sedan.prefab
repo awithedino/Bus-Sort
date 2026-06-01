@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4719131238904368584}
   - component: {fileID: 2233732551201605900}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -103,7 +103,9 @@ GameObject:
   - component: {fileID: 84158292934383088}
   - component: {fileID: 7399233123007107381}
   - component: {fileID: 5022797819616375570}
-  m_Layer: 0
+  - component: {fileID: 6605262636212585918}
+  - component: {fileID: 4482898201655531546}
+  m_Layer: 6
   m_Name: Green Sedan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,6 +226,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VehicleAnimator
   isAnimating: 0
+--- !u!54 &6605262636212585918
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684919648703302033}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &4482898201655531546
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684919648703302033}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 3}
+  m_Center: {x: 0, y: 0.5, z: 1}
 --- !u!1 &1615295301908185518
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,7 +285,7 @@ GameObject:
   - component: {fileID: 5602729910057333416}
   - component: {fileID: 7940381671683214934}
   - component: {fileID: 3679465043975985166}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Capacity Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -419,7 +469,7 @@ GameObject:
   - component: {fileID: 4636780401553550033}
   - component: {fileID: 7928981194194224070}
   - component: {fileID: 9212942800273182370}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1018,9 +1068,7 @@ GameObject:
   - component: {fileID: 212138568511870472}
   - component: {fileID: 6013940459431455442}
   - component: {fileID: 2264145950960072268}
-  - component: {fileID: 7773802627605855129}
-  - component: {fileID: 1117110311149117067}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1099,51 +1147,3 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7773802627605855129
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6106463906885278218}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1.0000005, z: 1.0000005}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &1117110311149117067
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6106463906885278218}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0

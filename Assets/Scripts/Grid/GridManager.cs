@@ -17,6 +17,7 @@ public class GridManager : MonoBehaviour
     public Transform gridParent;
     public Transform vehicleParent;
     public ParkingManager parkingManager;
+    public PerimeterTrack perimeterTrack;
     
     public Vector3 gridOffset = new Vector3(0, 0, -3f);
     
@@ -116,7 +117,8 @@ public class GridManager : MonoBehaviour
         return null;
     }
     
-    public bool EscapeVehicle(Vehicle car) {
+    public bool EscapeVehicle(Vehicle car, Vector3 frameHitPoint) 
+    {
         Transform targetSlot = parkingManager.GetNextAvailableSlot(car);
         
         if (targetSlot != null) {
@@ -127,8 +129,9 @@ public class GridManager : MonoBehaviour
                     }
                 }
             }
-            Vector3 exitPoint = car.transform.position + (car.transform.forward * 3f);
-            car.GetComponent<VehicleAnimator>().AnimateEscape(targetSlot, exitPoint);
+            
+            List<Vector3> escapeRoute = perimeterTrack.GetShortestPath(frameHitPoint, targetSlot.position);
+            car.GetComponent<VehicleAnimator>().AnimateEscape(escapeRoute, targetSlot);
             
             car.arrowVisual.gameObject.SetActive(false);
             return true;

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6606501196063487767}
   - component: {fileID: 4001748960218788538}
   - component: {fileID: 406236572777121710}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Capacity Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7776074128478488676}
   - component: {fileID: 8334907106183028107}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -286,7 +286,7 @@ GameObject:
   - component: {fileID: 2580426120024126110}
   - component: {fileID: 3497280850163659452}
   - component: {fileID: 4524074688753144112}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -887,7 +887,7 @@ GameObject:
   - component: {fileID: 467769761457962304}
   - component: {fileID: 6907641047486433573}
   - component: {fileID: 8361281332314429121}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1026,7 +1026,9 @@ GameObject:
   - component: {fileID: 871323559039907945}
   - component: {fileID: 7881842977634068932}
   - component: {fileID: 1832809038111064744}
-  m_Layer: 0
+  - component: {fileID: 885379413615435111}
+  - component: {fileID: 1698602556600918665}
+  m_Layer: 6
   m_Name: Orange Sedan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1147,3 +1149,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VehicleAnimator
   isAnimating: 0
+--- !u!54 &885379413615435111
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9137777365469958117}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &1698602556600918665
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9137777365469958117}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 3}
+  m_Center: {x: 0, y: 0.5, z: 1}

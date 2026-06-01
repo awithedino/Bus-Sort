@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using DG.Tweening;
 
 public class VehicleAnimator : MonoBehaviour {
@@ -10,6 +11,44 @@ public class VehicleAnimator : MonoBehaviour {
     {
         myVehicle = GetComponent<Vehicle>();
         myCollider = GetComponent<Collider>();
+    }
+    
+    private void SetLayerRecursively(GameObject obj, int newLayer)
+    {
+        obj.layer = newLayer;
+        foreach (Transform child in obj.transform)
+        {
+            SetLayerRecursively(child.gameObject, newLayer);
+        }
+    }
+    
+    public bool CheckEscapeClear(out Vector3 hitPoint, out float bumpDistance) 
+    {
+        hitPoint = Vector3.zero;
+        bumpDistance = 0f;
+        
+        BoxCollider box = myCollider as BoxCollider;
+        if (box == null) return false; // Failsafe
+
+        Vector3 localHalfExtents = box.size * 0.5f * 0.8f; 
+        Vector3 exactCenter = transform.TransformPoint(box.center);
+        
+        int combinedLayer = LayerMask.GetMask("Interactable", "PuzzleBoard");
+        if (Physics.BoxCast(exactCenter, localHalfExtents, transform.forward, out RaycastHit hit, transform.rotation, 50f, combinedLayer)) 
+        {
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Interactable")) 
+            {
+                bumpDistance = hit.distance; 
+                return false;
+            }
+
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("PuzzleBoard")) 
+            {
+                hitPoint = hit.point;
+                return true;
+            }
+        }
+        return false;
     }
     
     public void AnimateBump(Direction dir, int spaces) {
@@ -34,33 +73,35 @@ public class VehicleAnimator : MonoBehaviour {
         bumpSeq.OnComplete(() => isAnimating = false);
     }
 
-    public void AnimateEscape(Transform targetSlot, Vector3 gridExitPoint)
+    public void AnimateEscape(List<Vector3> escapePath, Transform targetSlot)
     {
         isAnimating = true;
         if (myCollider != null) myCollider.enabled = false;
 
         float flatY = transform.position.y;
-        Vector3 flatExit = new Vector3(gridExitPoint.x, flatY, gridExitPoint.z);
-        Vector3 lanePos = targetSlot.position + (targetSlot.forward * -4f);
-        Vector3 flatSlot = new Vector3(targetSlot.position.x, flatY, targetSlot.position.z);
         
-        Vector3[] approachPath = new Vector3[] { transform.position, flatExit, lanePos };
+        Vector3[] approachPath = new Vector3[escapePath.Count];
+        for(int i = 0; i < escapePath.Count; i++) {
+            approachPath[i] = new Vector3(escapePath[i].x, flatY, escapePath[i].z);
+        }
+
+        Vector3 flatSlot = new Vector3(targetSlot.position.x, flatY, targetSlot.position.z);
         Sequence parkSeq = DOTween.Sequence();
         
-        parkSeq.Append(transform.DOPath(approachPath, 0.6f, PathType.CatmullRom)
+        parkSeq.Append(transform.DOPath(approachPath, 1.2f, PathType.Linear)
             .SetOptions(false, AxisConstraint.Y)
             .SetLookAt(0.01f)
-            .SetEase(Ease.InOutQuad));
-        parkSeq.Append(transform.DOMove(flatSlot, 0.2f).SetEase(Ease.OutQuad));
+            .SetEase(Ease.Linear));
         
+        SetLayerRecursively(gameObject, LayerMask.NameToLayer("Default"));
+        parkSeq.Append(transform.DOMove(flatSlot, 0.25f).SetEase(Ease.OutQuad));
         Vector3 targetRot = new Vector3(0, targetSlot.rotation.eulerAngles.y, 0);
-        parkSeq.Join(transform.DORotate(targetRot, 0.2f));
+        parkSeq.Join(transform.DORotate(targetRot, 0.25f));
 
         parkSeq.OnComplete(() => {
             isAnimating = false;
             myVehicle.isParked = true; 
             myVehicle.SetTextVisible(true); 
-            
             if (myCollider != null) myCollider.enabled = true;
         });
     }

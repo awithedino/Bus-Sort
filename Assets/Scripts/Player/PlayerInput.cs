@@ -25,17 +25,21 @@ public class PlayerInput : MonoBehaviour
                 Vehicle clickedVehicle = gridManager.GetVehicleAt(gridPos.x, gridPos.y);
                 if (clickedVehicle != null)
                 {
-                    bool canEscape = gridManager.CheckPath(clickedVehicle, gridPos.x, gridPos.y, out int spaces);
-
-                    if (canEscape) {
-                        bool actuallyEscaped = gridManager.EscapeVehicle(clickedVehicle);
+                    VehicleAnimator carAnim = clickedVehicle.GetComponent<VehicleAnimator>();
+                    
+                    if (carAnim.CheckEscapeClear(out Vector3 frameHit, out float bumpDistance)) 
+                    {
+                        bool actuallyEscaped = gridManager.EscapeVehicle(clickedVehicle, frameHit);
 
                         if (actuallyEscaped) {
                             Debug.Log($"Vehicle {clickedVehicle.id} is out.");
                         } else {
                             Debug.Log($"Vehicle {clickedVehicle.id} path clear, but loading zone is full.");
                         }
-                    } else {
+                    } 
+                    else 
+                    {
+                        int spaces = Mathf.FloorToInt(bumpDistance);
                         gridManager.BumpVehicle(clickedVehicle, spaces);
                         Debug.Log($"Vehicle {clickedVehicle.id} is blocked.");
                     }
