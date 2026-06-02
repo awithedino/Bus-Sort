@@ -60,7 +60,7 @@ public class VehicleAnimator : MonoBehaviour {
         
         SetLayerRecursively(gameObject, LayerMask.NameToLayer("Default"));
         parkSeq.Append(transform.DOMove(flatSlot, 0.25f).SetEase(Ease.OutQuad));
-        Vector3 targetRot = new Vector3(0, targetSlot.rotation.eulerAngles.y, 0);
+        Vector3 targetRot = new Vector3(0, targetSlot.rotation.eulerAngles.y - 90f, 0);
         parkSeq.Join(transform.DORotate(targetRot, 0.25f));
 
         parkSeq.OnComplete(() => {
