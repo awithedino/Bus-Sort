@@ -3569,7 +3569,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4733206282342372}
@@ -3623,6 +3623,7 @@ MonoBehaviour:
   carBodyRenderer: {fileID: 23215879266689626}
   capacityText: {fileID: 2074582954576117787}
   capacityCanvas: {fileID: 5864498171407018038}
+  originalPrefab: {fileID: 0}
 --- !u!114 &-2880449083004471533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6595,7 +6596,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5864498171407018038
 Transform:
   m_ObjectHideFlags: 0

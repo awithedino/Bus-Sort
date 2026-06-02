@@ -1,146 +1,38 @@
-using System;
 using UnityEngine;
 using System.Collections.Generic;
-using DG.Tweening;
 
 public class GridManager : MonoBehaviour
 {
-    // Size of the car grid
-    public int width;
-    public int height;
-
-    public int[,] gridState;
-
-    public Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
-    private int nextCarId = 1;
-    
-    public Transform gridParent;
+    [Header("Level References")]
     public Transform vehicleParent;
     public ParkingManager parkingManager;
     public PerimeterTrack perimeterTrack;
-    
-    public Vector3 gridOffset = new Vector3(0, 0, -3f);
-    
-    [Header("Display Settings")]
-    public float baseGridSize = 6f;
-    
-    public void Start()
-    {
-    }
 
-    // ------------ GRID SETUP -----------------
-    public void InitializeGrid(int w, int h)
+    [Header("Active Vehicles")]
+    public List<Vehicle> activeVehicles = new List<Vehicle>();
+    public void RegisterVehicle(Vehicle newVehicle) 
     {
-        width = w;
-        height = h;
-        gridState = new int[width, height];
-        vehicles.Clear();
-        AutoScaleBoard(width, height);
-    }
-    
-    public Vector3 GridToWorld(int x, int y) {
-        float startX = -((width - 1) / 2f) + gridOffset.x;
-        float startZ = -((height - 1) / 2f) + gridOffset.z; 
-        return new Vector3(startX + x, 0, startZ + y);
-    }
-    
-    public Vector2Int WorldToGrid(Vector3 worldPos) {
-        float startX = -((width - 1) / 2f) + gridOffset.x;
-        float startZ = -((height - 1) / 2f) + gridOffset.z;
-    
-        int x = Mathf.RoundToInt(worldPos.x - startX);
-        int y = Mathf.RoundToInt(worldPos.z - startZ); // y reads from z!
-    
-        return new Vector2Int(x, y);
-    }
-    
-    private void AutoScaleBoard(int currentWidth, int currentHeight)
-    {
-        float maxDimension = Mathf.Max(currentWidth, currentHeight);
-        
-        if (maxDimension > baseGridSize)
+        if (!activeVehicles.Contains(newVehicle))
         {
-            float scaleFactor = baseGridSize / maxDimension;
-            transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+            activeVehicles.Add(newVehicle);
         }
-        else
+    }
+    
+    public void RemoveVehicle(Vehicle car)
+    {
+        if (activeVehicles.Contains(car))
         {
-            transform.localScale = Vector3.one; // Keep it normal size
+            activeVehicles.Remove(car);
         }
     }
     
-    // ---------------- VEHICLE REGISTER, POSITION, SPAWNING ---------------------
-
-    public void RegisterVehicle(Vehicle newVehicle, int startX, int startY) {
-        vehicles.Add(newVehicle.id, newVehicle);
-    
-        for (int i = 0; i < newVehicle.length; i++) {
-            int cellX = startX;
-            int cellY = startY;
-            
-            // Vehicles taking slot 
-            switch (newVehicle.moveDirection) {
-                case Direction.Up: cellY += i; break;
-                case Direction.Right: cellX += i; break;
-                case Direction.Down: cellY -= i; break;
-                case Direction.Left: cellX -= i; break;
-            }
-
-            gridState[cellX, cellY] = newVehicle.id;
-        }
-    }
-
-    public void SpawnVehicle(Vehicle newVehicle, int startX, int startY, Direction dir, ColorType chosenColor)
-    {
-        Vector3 spawnPos = GridToWorld(startX, startY); 
-            Vehicle spawnedCar = Instantiate(newVehicle, spawnPos, newVehicle.transform.rotation, vehicleParent);
-    
-        spawnedCar.id = nextCarId;
-        nextCarId++;
-    
-        spawnedCar.SetupDirection(dir);
-        spawnedCar.ApplyColor(chosenColor); 
-
-        RegisterVehicle(spawnedCar, startX, startY);
-    }
-
-    public Vehicle GetVehicleAt(int x, int y)
-    {
-        if (x < 0 || x >= width || y < 0 || y >= height) return null;
-
-        int cellId = gridState[x, y];
-
-        // If it is not empty, grab a car from Dictionary
-        if (cellId > 0 && vehicles.ContainsKey(cellId))
-        {
-            return vehicles[cellId];
-        }
-
-        return null;
-    }   
-    
-    public void BumpVehicle(Vehicle car, int spaces) {  
-        car.GetComponent<VehicleAnimator>().AnimateBump(car.moveDirection, spaces);
-    }
-    
-    public void ShakeVehicle(Vehicle car) {
-        car.GetComponent<VehicleAnimator>().AnimateShake();
-    }
-    
-    public void RemoveVehicleFromGrid(Vehicle car)
-    {
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                if (gridState[x, y] == car.id) gridState[x, y] = 0; 
-            }
-        }
-    }
-
     public void ClearBoard()
     {
-        foreach (Transform child in transform)
+        Vehicle[] leftoverCars = vehicleParent.GetComponentsInChildren<Vehicle>(true);
+        
+        foreach (Vehicle car in leftoverCars)
         {
-            Destroy(child.gameObject);
+            Destroy(car.gameObject);
         }
     }
 }

@@ -1,10 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using DG.Tweening;
 
 public class PlayerInput : MonoBehaviour
 {
-    public GridManager gridManager;
+    public GridManager gridManager; // Keep the name for now so your Inspector doesn't break!
     private Camera mainCam;
 
     void Start() 
@@ -17,35 +16,32 @@ public class PlayerInput : MonoBehaviour
         if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
         {
             Vector2 screenPosition = Pointer.current.position.ReadValue();
-            
             Ray ray = mainCam.ScreenPointToRay(screenPosition);
             if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                Vector2Int gridPos = gridManager.WorldToGrid(hit.point);
-                Vehicle clickedVehicle = gridManager.GetVehicleAt(gridPos.x, gridPos.y);
+                Vehicle clickedVehicle = hit.collider.GetComponentInParent<Vehicle>();
                 if (clickedVehicle != null)
                 {
                     VehicleAnimator carAnim = clickedVehicle.GetComponent<VehicleAnimator>();
                     if (carAnim.isAnimating) return; 
-                    
-                    if (gridManager.perimeterTrack.CheckMathEscapeClear(clickedVehicle, gridManager, out Vector3 exitPos, out int bumpSpaces)) 
+                    // Ask the Track if clear, and grab the dynamic frameHitPoint!
+                    if (gridManager.perimeterTrack.CheckFreeformEscapeClear(clickedVehicle, out float blockDistance, out Vector3 frameHitPoint)) 
                     {
                         Transform targetSlot = gridManager.parkingManager.GetNextAvailableSlot(clickedVehicle);
                         
                         if (targetSlot != null) {
-                            gridManager.RemoveVehicleFromGrid(clickedVehicle);
-                            gridManager.perimeterTrack.RouteEscapingVehicle(clickedVehicle, exitPos, targetSlot);
+                            gridManager.RemoveVehicle(clickedVehicle);
+                            gridManager.perimeterTrack.RouteEscapingVehicle(clickedVehicle, frameHitPoint, targetSlot);
                         } else {
-                            gridManager.ShakeVehicle(clickedVehicle); // Grid full!
+                            carAnim.AnimateShake(); 
                         }
                     } 
                     else 
                     {
-                        // Blocked!
-                        gridManager.BumpVehicle(clickedVehicle, bumpSpaces);
+                        carAnim.AnimateBump(blockDistance); 
                     }
                 }
             }
         }
     }
-}
+}   

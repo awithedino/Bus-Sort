@@ -31,6 +31,9 @@ public class Vehicle : MonoBehaviour
     public TMP_Text capacityText;
     public Transform capacityCanvas;
     
+    [HideInInspector] 
+    public Vehicle originalPrefab;
+    
     void Start()
     {
         UpdateCapacityUI();

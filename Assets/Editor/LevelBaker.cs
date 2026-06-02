@@ -2,18 +2,26 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
-public class LevelBaker : Editor
+public class LevelBaker 
 {
     [MenuItem("Tools/Bake Scene to Freeform Level")]
     public static void BakeLevel()
     {
-        Vehicle[] allCars = FindObjectsByType<Vehicle>(FindObjectsSortMode.None);
-
+        Vehicle[] allCars = UnityEngine.Object.FindObjectsByType<Vehicle>(FindObjectsSortMode.None);
         if (allCars.Length == 0)
         {
             Debug.LogWarning("No cars found in the scene to save!");
             return;
         }
+        
+        string path = EditorUtility.SaveFilePanelInProject(
+            "Save Freeform Level",
+            "Level_01", // Default name
+            "asset",
+            "Choose a name and location for your level"
+        );
+        
+        if (string.IsNullOrEmpty(path)) return; 
         
         FreeformLevelSO newLevel = ScriptableObject.CreateInstance<FreeformLevelSO>();
         newLevel.carsInLevel = new List<FreeformCarData>();
@@ -30,15 +38,11 @@ public class LevelBaker : Editor
             newLevel.carsInLevel.Add(data);
         }
         
-        string path = "Assets/NewFreeformLevel.asset";
-        path = AssetDatabase.GenerateUniqueAssetPath(path);
-        
         AssetDatabase.CreateAsset(newLevel, path);
         AssetDatabase.SaveAssets();
 
         Debug.Log($"Success! Baked {allCars.Length} cars into {path} 🚗✨");
         
-        // 5. Highlight the new file for you
         EditorUtility.FocusProjectWindow();
         Selection.activeObject = newLevel;
     }

@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     private int carsEscaped;
     
     [Header("Levels")]
-    public List<LevelDataSO> allLevels;
+    public List<FreeformLevelSO> allLevels; 
     private int currentLevelIndex = 0;
 
     void Awake()
@@ -35,7 +35,9 @@ public class GameManager : MonoBehaviour
         totalCarsInLevel = allLevels[currentLevelIndex].carsInLevel.Count;
         
         levelLoader.currentLevel = allLevels[currentLevelIndex];
-        levelLoader.LoadLevelFromSO();
+        
+        // 2. Calling the new freeform loader method!
+        levelLoader.LoadFreeformLevel(); 
     }
     
     public void CarEscaped()
@@ -74,6 +76,9 @@ public class GameManager : MonoBehaviour
             currentLevelIndex = 0;
             Debug.Log("All levels complete! 🏆");
         }
+        
+        // LoadFreeformLevel actually clears the board automatically now, 
+        // but leaving this here is perfectly safe as a double-check!
         levelLoader.gridManager.ClearBoard(); 
         winPanel.SetActive(false);
         LoadCurrentLevel();

@@ -234,7 +234,7 @@ MonoBehaviour:
   - {fileID: 6206930928120685638}
   - {fileID: 6136595692964882140}
   - {fileID: 8818103064553419065}
-  speed: 0.3
+  speed: 0.4
   stopSpacing: 0.05
   currentTrack: {fileID: 0}
   currentT: 1

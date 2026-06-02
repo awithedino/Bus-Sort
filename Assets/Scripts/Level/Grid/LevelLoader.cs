@@ -3,41 +3,41 @@ using UnityEngine;
 
 public class LevelLoader : MonoBehaviour 
 {
+    [Header("Dependencies")]
     public GridManager gridManager;
+    public Transform vehicleParent; 
     
     [Header("Level Data")]
-    public LevelDataSO currentLevel;
+    public FreeformLevelSO currentLevel;
 
     private List<ColorType> passengerDeck = new List<ColorType>();
 
-    public void LoadLevelFromSO() 
+    public void LoadFreeformLevel()
     {
-        gridManager.InitializeGrid(currentLevel.gridWidth, currentLevel.gridHeight);
-        
-        foreach (CarSpawnData carData in currentLevel.carsInLevel) 
+        gridManager.ClearBoard();
+        foreach (FreeformCarData data in currentLevel.carsInLevel)
         {
-            // PASS THE ENUM: Add carData.paintColor here!
-            gridManager.SpawnVehicle(carData.carPrefab, carData.startX, carData.startY, carData.moveDirection, carData.paintColor);
-        }
-
-        BuildAndShuffleDeck();
-    }
-    
-    public void LoadFreeformLevel(FreeformLevelSO levelData)
-    {
-        foreach (FreeformCarData data in levelData.carsInLevel)
-        {
-            Vehicle spawnedCar = Instantiate(data.carPrefab, data.position, data.rotation);
+            Vehicle spawnedCar = Instantiate(data.carPrefab, data.position, data.rotation, vehicleParent);
             spawnedCar.ApplyColor(data.paintColor);
+            gridManager.RegisterVehicle(spawnedCar);
         }
+        BuildAndShuffleDeck();
     }
 
     private void BuildAndShuffleDeck()
     {
-        Dictionary<ColorType, int> required = currentLevel.CalculateRequiredPassengers();
-        passengerDeck.Clear();
+        Dictionary<ColorType, int> required = new Dictionary<ColorType, int>();
+        
+        foreach (FreeformCarData data in currentLevel.carsInLevel)
+        {
+            if (!required.ContainsKey(data.paintColor))
+            {
+                required[data.paintColor] = 0;
+            }
+            required[data.paintColor] += (data.carPrefab.capacity / 4); 
+        }
 
-        // Get a list of the colors we still need to spawn
+        passengerDeck.Clear();
         List<ColorType> availableColors = new List<ColorType>(required.Keys);
 
         while (availableColors.Count > 0)
@@ -57,7 +57,7 @@ public class LevelLoader : MonoBehaviour
             }
         }
     }
-    
+
     public bool TryDrawPassenger(out ColorType drawnColor)
     {
         if (passengerDeck.Count > 0)
