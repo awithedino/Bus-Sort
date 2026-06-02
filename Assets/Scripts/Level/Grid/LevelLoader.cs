@@ -22,6 +22,15 @@ public class LevelLoader : MonoBehaviour
 
         BuildAndShuffleDeck();
     }
+    
+    public void LoadFreeformLevel(FreeformLevelSO levelData)
+    {
+        foreach (FreeformCarData data in levelData.carsInLevel)
+        {
+            Vehicle spawnedCar = Instantiate(data.carPrefab, data.position, data.rotation);
+            spawnedCar.ApplyColor(data.paintColor);
+        }
+    }
 
     private void BuildAndShuffleDeck()
     {

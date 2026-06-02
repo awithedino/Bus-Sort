@@ -9,7 +9,7 @@ public class GridManager : MonoBehaviour
     public int width;
     public int height;
 
-    private int[,] gridState;
+    public int[,] gridState;
 
     public Dictionary<int, Vehicle> vehicles = new Dictionary<int, Vehicle>();
     private int nextCarId = 1;
@@ -93,7 +93,7 @@ public class GridManager : MonoBehaviour
     public void SpawnVehicle(Vehicle newVehicle, int startX, int startY, Direction dir, ColorType chosenColor)
     {
         Vector3 spawnPos = GridToWorld(startX, startY); 
-        Vehicle spawnedCar = Instantiate(newVehicle, spawnPos, newVehicle.transform.rotation, vehicleParent);
+            Vehicle spawnedCar = Instantiate(newVehicle, spawnPos, newVehicle.transform.rotation, vehicleParent);
     
         spawnedCar.id = nextCarId;
         nextCarId++;
@@ -117,31 +117,7 @@ public class GridManager : MonoBehaviour
         }
 
         return null;
-    }
-    
-    public bool EscapeVehicle(Vehicle car, Vector3 frameHitPoint) 
-    {
-        Transform targetSlot = parkingManager.GetNextAvailableSlot(car);
-        
-        if (targetSlot != null) {
-            for (int x = 0; x < width; x++) {
-                for (int y = 0; y < height; y++) {
-                    if (gridState[x, y] == car.id) {
-                        gridState[x, y] = 0; 
-                    }
-                }
-            }
-            
-            List<Vector3> escapeRoute = perimeterTrack.GetShortestPath(frameHitPoint, targetSlot.position);
-            car.GetComponent<VehicleAnimator>().AnimateEscape(escapeRoute, targetSlot);
-            
-            car.arrowVisual.gameObject.SetActive(false);
-            return true;
-        } else {
-            ShakeVehicle(car);
-            return false;
-        }
-    }
+    }   
     
     public void BumpVehicle(Vehicle car, int spaces) {  
         car.GetComponent<VehicleAnimator>().AnimateBump(car.moveDirection, spaces);
@@ -150,43 +126,16 @@ public class GridManager : MonoBehaviour
     public void ShakeVehicle(Vehicle car) {
         car.GetComponent<VehicleAnimator>().AnimateShake();
     }
-
-    public bool IsCellEmpty(int x, int y)
-    {
-        if (x < 0 || y < 0 || x >= width || y >= height) return false;
-        return gridState[x, y] == 0;
-    }
-
-    public bool CheckPath(Vehicle vehicle, int headX, int headY, out int spaces)
-    {
-        int stepX = 0; int stepY = 0;
-        switch (vehicle.moveDirection) {
-            case Direction.Up: stepY = 1; break;
-            case Direction.Down: stepY = -1; break;
-            case Direction.Left: stepX = -1; break;
-            case Direction.Right: stepX = 1; break;
-        }
-
-        int currX = headX + stepX;
-        int currY = headY + stepY;
-        spaces = 0;
-
-        while (currX >= 0 && currY >= 0 && currX < width && currY < height)
-        {
-            if (gridState[currX, currY] != 0 && gridState[currX, currY] != vehicle.id) {
-                return false;
-            }
-            
-            if (gridState[currX, currY] == 0) {
-                spaces++; 
-            }
-            
-            currX += stepX;
-            currY += stepY;
-        }
-        return true;
-    }
     
+    public void RemoveVehicleFromGrid(Vehicle car)
+    {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                if (gridState[x, y] == car.id) gridState[x, y] = 0; 
+            }
+        }
+    }
+
     public void ClearBoard()
     {
         foreach (Transform child in transform)

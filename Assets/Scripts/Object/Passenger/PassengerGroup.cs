@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Splines;
+using DG.Tweening;
 
 public class PassengerGroup : MonoBehaviour
 {
@@ -17,10 +18,15 @@ public class PassengerGroup : MonoBehaviour
     public SplineContainer currentTrack;
     public float currentT = 1f;
     public PassengerGroup leader;
+    
+    private bool isBoarding = false; 
 
     void Update()
     {
-        if (currentTrack == null) return;
+        // If we are already boarding, don't execute any line-following logic!
+        if (currentTrack == null || isBoarding) return;
+        
+        float previousT = currentT; 
 
         bool isClosedLoop = currentTrack.Spline.Closed;
         if (leader != null)
@@ -58,6 +64,23 @@ public class PassengerGroup : MonoBehaviour
                 }
             }
         }
+
+        // The Pure-Math Scanner!
+        if (currentTrack != null && currentTrack.Spline.Closed) 
+        {
+            float checkPoint = 0.5f; 
+            
+            if (previousT > checkPoint && currentT <= checkPoint)
+            {
+                Vehicle targetCar = FindAnyObjectByType<ParkingManager>().FindMatchingCar(myColor);
+                
+                if (targetCar != null)
+                {
+                    AnimateBoarding(targetCar); 
+                    return; 
+                }
+            }
+        }
     }
     
     public void SetupColor(ColorType newColor, Material colorMaterial)
@@ -75,11 +98,14 @@ public class PassengerGroup : MonoBehaviour
         currentTrack = track;
         currentT = startT;
         leader = personInFront;
+        isBoarding = false;
         UpdateTransform();
     }
 
     private void UpdateTransform()
     {
+        if (currentTrack == null) return;
+        
         Vector3 worldPos = currentTrack.EvaluatePosition(currentT);
         transform.position = worldPos;
         
@@ -88,5 +114,34 @@ public class PassengerGroup : MonoBehaviour
         {
             transform.forward = forwardDir;
         }
+    }
+
+    public void AnimateBoarding(Vehicle car)
+    {
+        isBoarding = true;
+        car.currentCapacity += 4; 
+        
+        SplineQueueManager queueManager = FindAnyObjectByType<SplineQueueManager>();
+        if (queueManager != null)
+        {
+            queueManager.RemovePassengerFromLine(this);
+        }
+        
+        currentTrack = null; 
+        leader = null;
+        
+        transform.DOJump(car.transform.position, 1.5f, 1, 0.5f).SetEase(Ease.InOutQuad).OnComplete(() => 
+        {
+            car.boardedCapacity += 4;
+            car.UpdateCapacityUI();
+            
+            if (car.boardedCapacity >= car.capacity)
+            {
+                car.SetTextVisible(false);
+                FindAnyObjectByType<ParkingManager>().DispatchCar(car);
+            }
+            
+            PassengerPool.Instance.ReturnPassenger(this);
+        });
     }
 }

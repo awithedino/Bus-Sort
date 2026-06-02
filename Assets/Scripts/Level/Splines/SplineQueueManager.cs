@@ -7,22 +7,6 @@ public class SplineQueueManager : MonoBehaviour
     public SplineContainer loopSpline;
     public List<PassengerGroup> loopQueue = new List<PassengerGroup>();
     
-    public void ReleaseGatePassenger()
-    {
-        if (loopQueue.Count > 0)
-        {
-            PassengerGroup boardedGroup = loopQueue[0];
-            loopQueue.RemoveAt(0);
-            
-            if (loopQueue.Count > 0)
-            {
-                loopQueue[0].leader = null;
-            }
-            // TODO: Boarding animation
-            Destroy(boardedGroup.gameObject); 
-        }
-    }
-    
     public bool CanMergeAt(float mergeT, float safeDistance)
     {
         foreach (var group in loopQueue)

@@ -26,22 +26,23 @@ public class PlayerInput : MonoBehaviour
                 if (clickedVehicle != null)
                 {
                     VehicleAnimator carAnim = clickedVehicle.GetComponent<VehicleAnimator>();
+                    if (carAnim.isAnimating) return; 
                     
-                    if (carAnim.CheckEscapeClear(out Vector3 frameHit, out float bumpDistance)) 
+                    if (gridManager.perimeterTrack.CheckMathEscapeClear(clickedVehicle, gridManager, out Vector3 exitPos, out int bumpSpaces)) 
                     {
-                        bool actuallyEscaped = gridManager.EscapeVehicle(clickedVehicle, frameHit);
-
-                        if (actuallyEscaped) {
-                            Debug.Log($"Vehicle {clickedVehicle.id} is out.");
+                        Transform targetSlot = gridManager.parkingManager.GetNextAvailableSlot(clickedVehicle);
+                        
+                        if (targetSlot != null) {
+                            gridManager.RemoveVehicleFromGrid(clickedVehicle);
+                            gridManager.perimeterTrack.RouteEscapingVehicle(clickedVehicle, exitPos, targetSlot);
                         } else {
-                            Debug.Log($"Vehicle {clickedVehicle.id} path clear, but loading zone is full.");
+                            gridManager.ShakeVehicle(clickedVehicle); // Grid full!
                         }
                     } 
                     else 
                     {
-                        int spaces = Mathf.FloorToInt(bumpDistance);
-                        gridManager.BumpVehicle(clickedVehicle, spaces);
-                        Debug.Log($"Vehicle {clickedVehicle.id} is blocked.");
+                        // Blocked!
+                        gridManager.BumpVehicle(clickedVehicle, bumpSpaces);
                     }
                 }
             }
