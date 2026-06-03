@@ -24,8 +24,7 @@ public class PlayerInput : MonoBehaviour
                 {
                     VehicleAnimator carAnim = clickedVehicle.GetComponent<VehicleAnimator>();
                     if (carAnim.isAnimating) return; 
-                    // Ask the Track if clear, and grab the dynamic frameHitPoint!
-                    if (gridManager.perimeterTrack.CheckFreeformEscapeClear(clickedVehicle, out float blockDistance, out Vector3 frameHitPoint)) 
+                    if (gridManager.perimeterTrack.CheckFreeformEscapeClear(clickedVehicle, out float blockDistance, out Vector3 frameHitPoint, out Vehicle hitCar)) 
                     {
                         Transform targetSlot = gridManager.parkingManager.GetNextAvailableSlot(clickedVehicle);
                         
@@ -39,6 +38,10 @@ public class PlayerInput : MonoBehaviour
                     else 
                     {
                         carAnim.AnimateBump(blockDistance); 
+                        if (hitCar != null) 
+                        {
+                            hitCar.GetComponent<VehicleAnimator>().AnimateWobble(clickedVehicle.transform.forward);
+                        }
                     }
                 }
             }

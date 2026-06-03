@@ -18,7 +18,7 @@ public class PassengerGroup : MonoBehaviour
     public SplineContainer currentTrack;
     public float currentT = 1f;
     public PassengerGroup leader;
-    
+        
     private bool isBoarding = false; 
 
     void Update()
@@ -129,9 +129,13 @@ public class PassengerGroup : MonoBehaviour
         
         currentTrack = null; 
         leader = null;
-        
         transform.DOJump(car.transform.position, 1.5f, 1, 0.5f).SetEase(Ease.InOutQuad).OnComplete(() => 
         {
+            if (car.audioSource != null && car.hopInSound != null)
+            {
+                car.audioSource.pitch = Random.Range(0.9f, 1.1f);
+                car.audioSource.PlayOneShot(car.hopInSound);
+            }
             car.boardedCapacity += 4;
             car.UpdateCapacityUI();
             

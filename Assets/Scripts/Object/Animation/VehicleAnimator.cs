@@ -22,19 +22,29 @@ public class VehicleAnimator : MonoBehaviour {
         }
     }
     
-    public void AnimateBump(float distanceToObstacle) {
+    public void AnimateBump(float blockDistance)
+    {
         if (isAnimating) return; 
         isAnimating = true;
-
-        Vector3 originalPos = transform.position;
-        float driveDistance = Mathf.Max(0.1f, distanceToObstacle - 0.4f); 
         
-        Vector3 targetPos = originalPos + (transform.forward * driveDistance);
-        
+        Vector3 originalPosition = transform.position;
         Sequence bumpSeq = DOTween.Sequence();
-        bumpSeq.Append(transform.DOMove(targetPos, 0.2f).SetEase(Ease.OutQuad)); 
-        bumpSeq.Append(transform.DOMove(originalPos, 0.25f).SetEase(Ease.InOutSine));
-        bumpSeq.OnComplete(() => isAnimating = false);
+        Vector3 hitPosition = transform.position + (transform.forward * (blockDistance - 0.2f)); 
+        bumpSeq.Append(transform.DOMove(hitPosition, 0.15f).SetEase(Ease.InQuad));
+        bumpSeq.AppendCallback(() => {
+            if (myVehicle.sparkParticle != null) 
+            {
+                myVehicle.sparkParticle.Play();
+            }
+            if (myVehicle.audioSource != null && myVehicle.hitSound != null) 
+            {
+                myVehicle.audioSource.PlayOneShot(myVehicle.hitSound);
+            }
+        });
+        bumpSeq.Append(transform.DOMove(originalPosition, 0.2f).SetEase(Ease.OutQuad));
+        bumpSeq.OnComplete(() => {
+            isAnimating = false;
+        });
     }
 
     public void AnimateEscape(List<Vector3> escapePath, Transform targetSlot)
@@ -74,6 +84,17 @@ public class VehicleAnimator : MonoBehaviour {
 
     public void AnimateLeave()
     {
+        if (myVehicle.fullParticle != null && myVehicle.audioSource != null && myVehicle.fullSound  != null) 
+        {
+            myVehicle.fullParticle.Play();
+            myVehicle.audioSource.PlayOneShot(myVehicle.fullSound);
+        }
+
+        if (myVehicle.audioSource != null && myVehicle.leaveSound != null)
+        {
+            myVehicle.audioSource.PlayOneShot(myVehicle.leaveSound);
+        }
+        
         Sequence exitSequence = DOTween.Sequence();
         Vector3 lanePosition = transform.position + (transform.forward * -2f); 
         exitSequence.Append(transform.DOMove(lanePosition, 0.5f).SetEase(Ease.OutBack));
@@ -93,6 +114,16 @@ public class VehicleAnimator : MonoBehaviour {
         isAnimating = true;
         transform.DOShakeRotation(0.3f, new Vector3(0, 25f, 0), 15, 90, false)
                  .OnComplete(() => isAnimating = false);
+    }
+    
+    public void AnimateWobble(Vector3 hitDirection)
+    {
+        if (isAnimating) return; 
+        isAnimating = true;
+        transform.DOPunchPosition(hitDirection * 0.3f, 0.4f, 7, 0.5f)
+            .OnComplete(() => {
+                isAnimating = false; 
+            });
     }
     
     public void UpdateVisualRotation(Direction dir) {

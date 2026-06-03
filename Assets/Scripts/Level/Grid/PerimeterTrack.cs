@@ -7,10 +7,12 @@ public class PerimeterTrack : MonoBehaviour
     public List<Transform> waypoints;
 
     // --- 1. The Smart Border Scanner ---
-    public bool CheckFreeformEscapeClear(Vehicle car, out float blockDistance, out Vector3 frameHitPoint)
+    public bool CheckFreeformEscapeClear(Vehicle car, out float blockDistance, out Vector3 frameHitPoint, out Vehicle hitVehicle)
     {
         blockDistance = 0f;
         frameHitPoint = Vector3.zero;
+        hitVehicle = null;
+        
         Vector3 boxExtents = new Vector3(0.4f, 0.4f, 0.4f); 
 
         if (Physics.BoxCast(car.transform.position, boxExtents, car.transform.forward, out RaycastHit hitInfo, car.transform.rotation, 50f))
@@ -22,6 +24,7 @@ public class PerimeterTrack : MonoBehaviour
             }
             
             blockDistance = hitInfo.distance; 
+            hitVehicle = hitInfo.collider.GetComponentInParent<Vehicle>(); 
             return false; 
         }
 

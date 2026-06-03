@@ -34,6 +34,17 @@ public class Vehicle : MonoBehaviour
     [HideInInspector] 
     public Vehicle originalPrefab;
     
+    [Header("Effects")]
+    public ParticleSystem fullParticle;
+    public ParticleSystem sparkParticle;
+    
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip hitSound;
+    public AudioClip fullSound;
+    public AudioClip leaveSound;
+    public AudioClip hopInSound;
+    
     void Start()
     {
         UpdateCapacityUI();

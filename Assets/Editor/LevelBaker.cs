@@ -2,12 +2,12 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 
-public class LevelBaker 
+public class LevelBaker : Editor
 {
     [MenuItem("Tools/Bake Scene to Freeform Level")]
     public static void BakeLevel()
     {
-        Vehicle[] allCars = UnityEngine.Object.FindObjectsByType<Vehicle>(FindObjectsSortMode.None);
+        Vehicle[] allCars = FindObjectsByType<Vehicle>(FindObjectsSortMode.None);
         if (allCars.Length == 0)
         {
             Debug.LogWarning("No cars found in the scene to save!");
@@ -37,9 +37,11 @@ public class LevelBaker
 
             newLevel.carsInLevel.Add(data);
         }
-        
         AssetDatabase.CreateAsset(newLevel, path);
+        // Set the file dirty
+        EditorUtility.SetDirty(newLevel);
         AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
 
         Debug.Log($"Success! Baked {allCars.Length} cars into {path} 🚗✨");
         

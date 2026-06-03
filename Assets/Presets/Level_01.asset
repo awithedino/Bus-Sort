@@ -9,31 +9,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: a8c2c1810b22a344c9e94bc14164d0a1, type: 3}
   m_Name: Level_01
   m_EditorClassIdentifier: Assembly-CSharp::FreeformLevelSO
   carsInLevel:
   - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
-    position: {x: -0.32000005, y: -0.0000009536743, z: -13.57}
+    position: {x: 1.5899999, y: 0, z: -13.82}
+    rotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
+    paintColor: 0
+  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
+    position: {x: 2.43, y: 0, z: -13.1}
+    rotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
+    paintColor: 0
+  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
+    position: {x: -0.25, y: 0, z: -13.74}
     rotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
     paintColor: 3
   - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
-    position: {x: 1.48, y: -0.0000009536743, z: -13.39}
-    rotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
-    paintColor: 0
-  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
-    position: {x: -2.1399999, y: -0.0000009536743, z: -12.669999}
+    position: {x: 0.75, y: -0.0000016307349, z: -11.93}
     rotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
     paintColor: 1
   - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
-    position: {x: 2.4, y: -0.0000009536743, z: -12.57}
-    rotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
-    paintColor: 0
-  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
-    position: {x: 0.54999995, y: -0.0000009536743, z: -11.559999}
+    position: {x: -2.1000001, y: -0.0000016307349, z: -12.72}
     rotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
     paintColor: 1
   - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
-    position: {x: -1.12, y: -0.0000009536743, z: -14.37}
+    position: {x: -1.1099999, y: 0, z: -14.44}
     rotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
     paintColor: 3
