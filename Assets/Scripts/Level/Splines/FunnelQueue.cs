@@ -62,4 +62,10 @@ public class FunnelQueue : MonoBehaviour
         
         funnelQueue.Add(newGroup);
     }
+    
+    public void ResetQueue()
+    {
+        funnelQueue.Clear();
+        spawnTimer = 0f;
+    }
 }

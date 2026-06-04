@@ -49,4 +49,9 @@ public class SplineQueueManager : MonoBehaviour
         }
         loopQueue.Remove(boardedPassenger);
     }
+    
+    public void ResetQueue()
+    {
+        loopQueue.Clear();
+    }
 }

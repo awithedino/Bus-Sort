@@ -9,6 +9,7 @@ public class PassengerGroup : MonoBehaviour
     
     [Header("Visuals")]
     public Renderer[] passengerMeshes;
+    private ParkingManager parkingManager;
     
     [Header("Movement Settings")]
     public float speed = 0.4f;
@@ -18,16 +19,33 @@ public class PassengerGroup : MonoBehaviour
     public SplineContainer currentTrack;
     public float currentT = 1f;
     public PassengerGroup leader;
+    
+    [Header("Stunt Double")]
+    public StuntPassenger stuntPrefab;
         
-    private bool isBoarding = false; 
+    private bool isBoarding; 
 
+    void Awake()
+    {
+        parkingManager = FindAnyObjectByType<ParkingManager>();
+    }
+    
     void Update()
     {
-        // If we are already boarding, don't execute any line-following logic!
-        if (currentTrack == null || isBoarding) return;
+        if (currentTrack == null) return;
         
-        float previousT = currentT; 
-
+        if (currentTrack.Spline.Closed && parkingManager != null) 
+        {
+            if (currentT >= 0.4f && currentT <= 0.6f)
+            {
+                Vehicle targetCar = parkingManager.FindMatchingCar(myColor);
+                if (targetCar != null && !DOTween.IsTweening(targetCar.transform))
+                {
+                    AnimateBoarding(targetCar);
+                    return;
+                }
+            }
+        }
         bool isClosedLoop = currentTrack.Spline.Closed;
         if (leader != null)
         {
@@ -61,23 +79,6 @@ public class PassengerGroup : MonoBehaviour
                     currentT = Mathf.Max(currentT, 0f);
                     
                     UpdateTransform();
-                }
-            }
-        }
-
-        // The Pure-Math Scanner!
-        if (currentTrack != null && currentTrack.Spline.Closed) 
-        {
-            float checkPoint = 0.5f; 
-            
-            if (previousT > checkPoint && currentT <= checkPoint)
-            {
-                Vehicle targetCar = FindAnyObjectByType<ParkingManager>().FindMatchingCar(myColor);
-                
-                if (targetCar != null)
-                {
-                    AnimateBoarding(targetCar); 
-                    return; 
                 }
             }
         }
@@ -118,7 +119,6 @@ public class PassengerGroup : MonoBehaviour
 
     public void AnimateBoarding(Vehicle car)
     {
-        isBoarding = true;
         car.currentCapacity += 4; 
         
         SplineQueueManager queueManager = FindAnyObjectByType<SplineQueueManager>();
@@ -127,25 +127,18 @@ public class PassengerGroup : MonoBehaviour
             queueManager.RemovePassengerFromLine(this);
         }
         
+        for (int i = 0; i < passengerMeshes.Length; i++)
+        {
+            StuntPassenger stunt = StuntPool.Instance.GetStunt(passengerMeshes[i].transform.position, passengerMeshes[i].transform.rotation);
+            float delay = i * 0.1f;
+            bool isLast = (i == passengerMeshes.Length - 1);
+            
+            Material currentMat = passengerMeshes[i].sharedMaterial;
+            stunt.JumpIntoCar(car, currentMat, delay, isLast);
+        }
+        
         currentTrack = null; 
         leader = null;
-        transform.DOJump(car.transform.position, 1.5f, 1, 0.5f).SetEase(Ease.InOutQuad).OnComplete(() => 
-        {
-            if (car.audioSource != null && car.hopInSound != null)
-            {
-                car.audioSource.pitch = Random.Range(0.9f, 1.1f);
-                car.audioSource.PlayOneShot(car.hopInSound);
-            }
-            car.boardedCapacity += 4;
-            car.UpdateCapacityUI();
-            
-            if (car.boardedCapacity >= car.capacity)
-            {
-                car.SetTextVisible(false);
-                FindAnyObjectByType<ParkingManager>().DispatchCar(car);
-            }
-            
-            PassengerPool.Instance.ReturnPassenger(this);
-        });
+        PassengerPool.Instance.ReturnPassenger(this);
     }
 }

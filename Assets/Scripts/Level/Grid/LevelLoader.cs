@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class LevelLoader : MonoBehaviour 
 {
@@ -9,9 +10,11 @@ public class LevelLoader : MonoBehaviour
     
     [Header("Level Data")]
     public FreeformLevelSO currentLevel;
-
     private List<ColorType> passengerDeck = new List<ColorType>();
-
+    
+    [HideInInspector]
+    public bool isRestarting = false;
+    
     public void LoadFreeformLevel()
     {
         gridManager.ClearBoard();
@@ -56,6 +59,44 @@ public class LevelLoader : MonoBehaviour
                 availableColors.RemoveAt(randomColorIndex);
             }
         }
+    }
+
+    public void RestartCurrentLevel()
+    {
+        isRestarting = true; 
+
+        StuntPassenger[] activeStunts = FindObjectsByType<StuntPassenger>(FindObjectsSortMode.None);
+        foreach (StuntPassenger stunt in activeStunts)
+        {
+            stunt.transform.DOKill();
+            StuntPool.Instance.ReturnStunt(stunt);
+        }
+        
+        Vehicle[] allCars = FindObjectsByType<Vehicle>(FindObjectsSortMode.None);
+        foreach (Vehicle oldCar in allCars)
+        {
+            oldCar.transform.DOKill();
+            Destroy(oldCar.gameObject);
+        }
+        
+        PassengerGroup[] activeGroups = FindObjectsByType<PassengerGroup>(FindObjectsSortMode.None);
+        foreach (PassengerGroup group in activeGroups)
+        {
+            group.transform.DOKill();
+            group.leader = null; 
+            PassengerPool.Instance.ReturnPassenger(group);
+        }
+
+        FindAnyObjectByType<SplineQueueManager>().ResetQueue();
+        
+        FunnelQueue[] allFunnels = FindObjectsByType<FunnelQueue>(FindObjectsSortMode.None);
+        foreach (FunnelQueue funnel in allFunnels)
+        {
+            funnel.ResetQueue();
+        }
+
+        GameManager.Instance.LoadCurrentLevel();
+        isRestarting = false; 
     }
 
     public bool TryDrawPassenger(out ColorType drawnColor)

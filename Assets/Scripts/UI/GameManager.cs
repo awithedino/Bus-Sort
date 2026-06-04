@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,7 @@ public class GameManager : MonoBehaviour
     public LevelLoader levelLoader;
     public GameObject winPanel;
     public GameObject finalWinPanel;
+    public CanvasGroup loadingScreen;
     
     private int totalCarsInLevel;
     private int carsEscaped;
@@ -31,19 +33,41 @@ public class GameManager : MonoBehaviour
 
     public void LoadCurrentLevel()
     {
+        StartCoroutine(LoadingSequence());
+    }
+    
+    private System.Collections.IEnumerator LoadingSequence()
+    {
+        if (loadingScreen != null)
+        {
+            loadingScreen.gameObject.SetActive(true);
+            loadingScreen.alpha = 0f;
+            loadingScreen.DOFade(1f, 0.4f).SetUpdate(true);
+        }
+
+        yield return new WaitForSecondsRealtime(1f);
+        
+        CancelInvoke("LevelComplete"); 
+        FindAnyObjectByType<UIManager>().UpdateLevelText(currentLevelIndex);
+        
         carsEscaped = 0;
         totalCarsInLevel = allLevels[currentLevelIndex].carsInLevel.Count;
         
         levelLoader.currentLevel = allLevels[currentLevelIndex];
-        
-        // 2. Calling the new freeform loader method!
         levelLoader.LoadFreeformLevel(); 
+
+        if (loadingScreen != null)
+        {
+            Tween fadeOut = loadingScreen.DOFade(0f, 0.4f).SetUpdate(true);
+            yield return fadeOut.WaitForCompletion();
+            loadingScreen.gameObject.SetActive(false);
+        }
     }
     
     public void CarEscaped()
     {
+        if (FindAnyObjectByType<LevelLoader>().isRestarting) return;
         carsEscaped++;
-        
         if (carsEscaped >= totalCarsInLevel)
         {
             Invoke("LevelComplete", 1.5f); 
@@ -52,6 +76,7 @@ public class GameManager : MonoBehaviour
     
     public void LevelComplete()
     {
+        if (FindAnyObjectByType<LevelLoader>().isRestarting) return;
         if (currentLevelIndex >= allLevels.Count - 1)
         {
             finalWinPanel.SetActive(true);
@@ -77,8 +102,6 @@ public class GameManager : MonoBehaviour
             Debug.Log("All levels complete! 🏆");
         }
         
-        // LoadFreeformLevel actually clears the board automatically now, 
-        // but leaving this here is perfectly safe as a double-check!
         levelLoader.gridManager.ClearBoard(); 
         winPanel.SetActive(false);
         LoadCurrentLevel();
