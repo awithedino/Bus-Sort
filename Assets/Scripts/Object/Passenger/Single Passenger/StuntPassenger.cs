@@ -16,7 +16,7 @@ public class StuntPassenger : MonoBehaviour
                 if (car.audioSource != null && car.hopInSound != null)
                 {
                     car.audioSource.pitch = Random.Range(0.9f, 1.2f);
-                    car.audioSource.PlayOneShot(car.hopInSound);
+                    car.PlayHopIn();
                 }
 
                 car.boardedCapacity += 1;

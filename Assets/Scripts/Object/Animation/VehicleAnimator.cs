@@ -38,7 +38,7 @@ public class VehicleAnimator : MonoBehaviour {
             }
             if (myVehicle.audioSource != null && myVehicle.hitSound != null) 
             {
-                myVehicle.audioSource.PlayOneShot(myVehicle.hitSound);
+                myVehicle.PlayHit();
             }
         });
         bumpSeq.Append(transform.DOMove(originalPosition, 0.2f).SetEase(Ease.OutQuad));
@@ -79,6 +79,7 @@ public class VehicleAnimator : MonoBehaviour {
             myVehicle.SetTextVisible(true);
             if (myVehicle.capacityCanvas != null) myVehicle.capacityCanvas.gameObject.SetActive(true);
             if (myCollider != null) myCollider.enabled = true;
+            FindAnyObjectByType<ParkingManager>().CheckForDeadlock();
         });
     }
 
@@ -87,12 +88,12 @@ public class VehicleAnimator : MonoBehaviour {
         if (myVehicle.fullParticle != null && myVehicle.audioSource != null && myVehicle.fullSound  != null) 
         {
             myVehicle.fullParticle.Play();
-            myVehicle.audioSource.PlayOneShot(myVehicle.fullSound);
+            myVehicle.PlayFull();
         }
 
         if (myVehicle.audioSource != null && myVehicle.leaveSound != null)
         {
-            myVehicle.audioSource.PlayOneShot(myVehicle.leaveSound);
+            myVehicle.PlayLeave();
         }
         
         Sequence exitSequence = DOTween.Sequence();

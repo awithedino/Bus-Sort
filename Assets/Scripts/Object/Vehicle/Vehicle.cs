@@ -96,4 +96,18 @@ public class Vehicle : MonoBehaviour
     {
         return currentCapacity >= capacity;
     }
+    
+    public void PlayCarSound(AudioClip clip)
+    {
+        if (UIAudioManager.Instance != null && !UIAudioManager.Instance.isSfxOn) return;
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+    
+    public void PlayHit() { PlayCarSound(hitSound); }
+    public void PlayFull() { PlayCarSound(fullSound); }
+    public void PlayLeave() { PlayCarSound(leaveSound); }
+    public void PlayHopIn() { PlayCarSound(hopInSound); }
 }

@@ -14,46 +14,50 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FreeformLevelSO
   carsInLevel:
   - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
-    position: {x: -1.51, y: 0, z: -15.300001}
-    rotation: {x: 0, y: 0, z: 0, w: 1}
+    position: {x: -1.8, y: 0, z: -15.7}
+    rotation: {x: 0, y: 0.92387956, z: 0, w: 0.38268343}
     paintColor: 1
-  - carPrefab: {fileID: 5443160551435186642, guid: 35ffbedb1aea0d742a09a9322ba2af5c, type: 3}
-    position: {x: 0.78000003, y: 0, z: -14.700001}
+  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
+    position: {x: 1.8, y: 0, z: -10.2}
+    rotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
+    paintColor: 0
+  - carPrefab: {fileID: 7551511565257232206, guid: a8440fff79e5b20459e30ff875d0b5e4, type: 3}
+    position: {x: -1.15, y: 0, z: -14}
+    rotation: {x: 0, y: 0.5, z: 0, w: 0.8660254}
+    paintColor: 2
+  - carPrefab: {fileID: 7551511565257232206, guid: a8440fff79e5b20459e30ff875d0b5e4, type: 3}
+    position: {x: 1.15, y: 0, z: -14}
+    rotation: {x: 0, y: 0.86602545, z: 0, w: 0.49999994}
+    paintColor: 2
+  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
+    position: {x: -2.7, y: 0, z: -13}
     rotation: {x: 0, y: 0, z: 0, w: 1}
     paintColor: 2
   - carPrefab: {fileID: 5443160551435186642, guid: 35ffbedb1aea0d742a09a9322ba2af5c, type: 3}
-    position: {x: 0.78000003, y: 0, z: -11.700001}
-    rotation: {x: 0, y: 0, z: 0, w: 1}
-    paintColor: 3
-  - carPrefab: {fileID: 5443160551435186642, guid: 35ffbedb1aea0d742a09a9322ba2af5c, type: 3}
-    position: {x: 3.1799998, y: 0, z: -11.700001}
-    rotation: {x: 0, y: 0, z: 0, w: 1}
-    paintColor: 3
-  - carPrefab: {fileID: 7551511565257232206, guid: a8440fff79e5b20459e30ff875d0b5e4, type: 3}
-    position: {x: -1.51, y: 0, z: -13.1}
-    rotation: {x: 0, y: 0, z: 0, w: 1}
-    paintColor: 3
-  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
-    position: {x: 1.9800001, y: 0, z: -10.200001}
+    position: {x: -0, y: 0, z: -10.6}
     rotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
     paintColor: 0
   - carPrefab: {fileID: 5443160551435186642, guid: 35ffbedb1aea0d742a09a9322ba2af5c, type: 3}
-    position: {x: 3.1799998, y: 0, z: -14.700001}
-    rotation: {x: 0, y: 0, z: 0, w: 1}
-    paintColor: 2
-  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
-    position: {x: 1.9799997, y: 0, z: -13.200001}
+    position: {x: -0, y: 0, z: -15.2}
     rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
     paintColor: 1
-  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
-    position: {x: -1.51, y: 0.0000007566747, z: -10.89}
-    rotation: {x: 0, y: 0, z: 0, w: 1}
-    paintColor: 1
-  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
-    position: {x: -3.0100002, y: 0, z: -11.700001}
-    rotation: {x: 0, y: 0.2588191, z: 0, w: 0.9659258}
+  - carPrefab: {fileID: 7551511565257232206, guid: a8440fff79e5b20459e30ff875d0b5e4, type: 3}
+    position: {x: 1.15, y: 0, z: -12}
+    rotation: {x: 0, y: 0.5, z: 0, w: 0.8660254}
     paintColor: 2
   - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
-    position: {x: 1.9799992, y: 0, z: -16.2}
-    rotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+    position: {x: 2.7, y: 0, z: -13}
+    rotation: {x: 0, y: 0, z: 0, w: 1}
+    paintColor: 2
+  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
+    position: {x: -1.8, y: 0, z: -10.2}
+    rotation: {x: 0, y: 0.38268343, z: 0, w: 0.92387956}
+    paintColor: 0
+  - carPrefab: {fileID: 7551511565257232206, guid: a8440fff79e5b20459e30ff875d0b5e4, type: 3}
+    position: {x: -1.15, y: 0, z: -12}
+    rotation: {x: 0, y: -0.5, z: 0, w: 0.8660254}
+    paintColor: 2
+  - carPrefab: {fileID: 2184564185024709249, guid: 4cd24b8d8014a5242818c56be79b6b50, type: 3}
+    position: {x: 1.8, y: 0, z: -15.7}
+    rotation: {x: 0, y: -0.92387956, z: 0, w: 0.38268343}
     paintColor: 1

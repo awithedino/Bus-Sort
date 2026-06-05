@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,7 +11,11 @@ public class GameManager : MonoBehaviour
     public LevelLoader levelLoader;
     public GameObject winPanel;
     public GameObject finalWinPanel;
+    public GameObject losePanel;
     public CanvasGroup loadingScreen;
+    
+    [Header("Currency")]
+    public int totalCoins = 300;
     
     private int totalCarsInLevel;
     private int carsEscaped;
@@ -18,10 +23,14 @@ public class GameManager : MonoBehaviour
     [Header("Levels")]
     public List<FreeformLevelSO> allLevels; 
     private int currentLevelIndex = 0;
+    
+    [HideInInspector] public bool isGameOver = false;
 
     void Awake()
     {
         Instance = this;
+        currentLevelIndex = PlayerPrefs.GetInt("SavedLevel", 0);
+        totalCoins = PlayerPrefs.GetInt("TotalCoins", 0);
     }
 
     void Start()
@@ -34,9 +43,12 @@ public class GameManager : MonoBehaviour
     public void LoadCurrentLevel()
     {
         StartCoroutine(LoadingSequence());
+        UIAudioManager.Instance.ChangeMusic(UIAudioManager.Instance.gameplayMusic, true); 
+        
+        if (losePanel != null) losePanel.SetActive(false);
     }
     
-    private System.Collections.IEnumerator LoadingSequence()
+    private IEnumerator LoadingSequence()
     {
         if (loadingScreen != null)
         {
@@ -55,6 +67,10 @@ public class GameManager : MonoBehaviour
         
         levelLoader.currentLevel = allLevels[currentLevelIndex];
         levelLoader.LoadFreeformLevel(); 
+        
+        isGameOver = false;
+        PlayerInput input = FindAnyObjectByType<PlayerInput>();
+        if (input != null) input.enabled = true;
 
         if (loadingScreen != null)
         {
@@ -76,15 +92,36 @@ public class GameManager : MonoBehaviour
     
     public void LevelComplete()
     {
-        if (FindAnyObjectByType<LevelLoader>().isRestarting) return;
+        if (isGameOver || FindAnyObjectByType<LevelLoader>().isRestarting) return;
+        isGameOver = true; 
+        int oldCoins = totalCoins;
+        totalCoins += 20;
+        PlayerPrefs.SetInt("TotalCoins", totalCoins);
+        PlayerPrefs.Save();
         if (currentLevelIndex >= allLevels.Count - 1)
         {
-            finalWinPanel.SetActive(true);
+            ShowPanelWithPop(finalWinPanel); 
+            UIAudioManager.Instance.ChangeMusic(UIAudioManager.Instance.finalWinMusic, false);
         }
         else
         {
-            winPanel.SetActive(true);
+            ShowPanelWithPop(winPanel);
+            UIAudioManager.Instance.ChangeMusic(UIAudioManager.Instance.winMusic, false);
         }
+        FindAnyObjectByType<UIManager>().AnimateWinCoins(oldCoins, totalCoins);
+    }
+    
+    public void GameOver()
+    {
+        if (isGameOver || FindAnyObjectByType<LevelLoader>().isRestarting) return;
+        isGameOver = true; 
+        ShowPanelWithPop(losePanel);
+        if (UIAudioManager.Instance.loseMusic != null) 
+        {
+            UIAudioManager.Instance.ChangeMusic(UIAudioManager.Instance.loseMusic, false);
+        }
+        PlayerInput input = FindAnyObjectByType<PlayerInput>();
+        if (input != null) input.enabled = false;
     }
     
     public void LoadMainMenu()
@@ -96,14 +133,27 @@ public class GameManager : MonoBehaviour
     {
         currentLevelIndex++;
         
+        // If we beat the final level, loop back to Level 1! 🔄
         if (currentLevelIndex >= allLevels.Count)
         {
-            currentLevelIndex = 0;
-            Debug.Log("All levels complete! 🏆");
+            currentLevelIndex = 0; 
         }
         
+        PlayerPrefs.SetInt("SavedLevel", currentLevelIndex);
+        PlayerPrefs.Save(); 
+
         levelLoader.gridManager.ClearBoard(); 
-        winPanel.SetActive(false);
+        
+        if (winPanel != null) winPanel.SetActive(false);
+        if (finalWinPanel != null) finalWinPanel.SetActive(false);
+        
         LoadCurrentLevel();
+    }
+    
+    private void ShowPanelWithPop(GameObject panel)
+    {
+        panel.SetActive(true);
+        panel.transform.localScale = Vector3.zero;
+        panel.transform.DOScale(Vector3.one, 0.5f).SetEase(Ease.OutBack).SetUpdate(true);
     }
 }

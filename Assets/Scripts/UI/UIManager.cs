@@ -7,7 +7,7 @@ public class UIManager : MonoBehaviour
 {
     [Header("Top Bar UI")]
     public TextMeshProUGUI levelText;
-
+    public TextMeshProUGUI winPanelCoinText;
     public TextMeshProUGUI winPanelLevelText;
     
     [Header("Settings Popup")]
@@ -23,6 +23,24 @@ public class UIManager : MonoBehaviour
             
             settingsOverlay.SetActive(false); 
         }
+    }
+    
+    public void UpdateCoinText(int currentCoins)
+    {
+        if (winPanelCoinText != null) winPanelCoinText.text = currentCoins.ToString();
+    }
+    
+    public void AnimateWinCoins(int oldTotal, int newTotal)
+    {
+        if (winPanelCoinText == null) return;
+        
+        int tempCoins = oldTotal;
+        winPanelCoinText.text = tempCoins.ToString();
+        DOTween.To(() => tempCoins, x => 
+        {
+            tempCoins = x;
+            winPanelCoinText.text = tempCoins.ToString();
+        }, newTotal, 1.5f).SetEase(Ease.OutQuad).SetUpdate(true);
     }
     
     public void UpdateLevelText(int levelIndex)
