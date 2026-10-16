@@ -13,23 +13,60 @@ public class PerimeterTrack : MonoBehaviour
         frameHitPoint = Vector3.zero;
         hitVehicle = null;
         
-        Vector3 boxExtents = new Vector3(0.4f, 0.4f, 0.4f); 
+        Vector3 boxExtents = new Vector3(0.4f, 0.4f, 0.4f);
 
         if (Physics.BoxCast(car.transform.position, boxExtents, car.transform.forward, out RaycastHit hitInfo, car.transform.rotation, 50f))
         {
             if (hitInfo.collider.gameObject.layer == LayerMask.NameToLayer("PuzzleBoard"))
             {
                 frameHitPoint = car.transform.position + (car.transform.forward * hitInfo.distance);
-                return true; 
+                DrawDebugScan(car, boxExtents, hitInfo.distance, Color.green);
+                return true;
             }
-            
-            blockDistance = hitInfo.distance; 
-            hitVehicle = hitInfo.collider.GetComponentInParent<Vehicle>(); 
-            return false; 
+
+            blockDistance = hitInfo.distance;
+            hitVehicle = hitInfo.collider.GetComponentInParent<Vehicle>();
+            DrawDebugScan(car, boxExtents, hitInfo.distance, Color.red);
+            return false;
         }
 
         frameHitPoint = car.transform.position + (car.transform.forward * 15f);
-        return true; 
+        DrawDebugScan(car, boxExtents, 15f, Color.green);
+        return true;
+    }
+
+    // Debug visual for screenshots: green = clear to escape, red = blocked.
+    // Lines stay for debugDrawDuration seconds, so you can pause and capture them.
+    // Visible in the Scene view, or in the Game view with Gizmos turned on.
+    [Header("Debug")]
+    public bool debugDrawScan = true;
+    public float debugDrawDuration = 10f;
+
+    private void DrawDebugScan(Vehicle car, Vector3 extents, float distance, Color color)
+    {
+        if (!debugDrawScan) return;
+
+        Transform t = car.transform;
+        Vector3 origin = t.position;
+        Vector3 dir = t.forward * distance;
+
+        // Centre ray
+        Debug.DrawRay(origin, dir, color, debugDrawDuration);
+
+        // Four corner rays showing the width/height of the box cast
+        for (int sx = -1; sx <= 1; sx += 2)
+        {
+            for (int sy = -1; sy <= 1; sy += 2)
+            {
+                Vector3 offset = t.rotation * new Vector3(extents.x * sx, extents.y * sy, 0f);
+                Debug.DrawRay(origin + offset, dir, color, debugDrawDuration);
+            }
+        }
+
+        // Cross at the end of the scan so the hit point is easy to spot
+        Vector3 end = origin + dir;
+        Debug.DrawRay(end - t.right * 0.3f, t.right * 0.6f, color, debugDrawDuration);
+        Debug.DrawRay(end - t.up * 0.3f, t.up * 0.6f, color, debugDrawDuration);
     }
 
     // --- 2. The Routing Link ---
